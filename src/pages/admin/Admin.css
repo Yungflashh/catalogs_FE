@@ -174,18 +174,44 @@
 @media (max-width: 720px) {
   .admin-shell { grid-template-columns: 1fr; }
   .admin-sidebar {
-    position: static;
+    position: sticky;
+    top: 60px;
+    z-index: 50;
     height: auto;
     flex-direction: row;
     align-items: center;
     overflow-x: auto;
-    padding: 14px;
+    padding: 12px 14px;
+    gap: 6px;
+    -webkit-overflow-scrolling: touch;
+    border-right: none;
+    border-bottom: 1px solid var(--glass-border);
   }
-  .admin-brand { margin-bottom: 0; margin-right: 10px; }
+  .admin-sidebar::-webkit-scrollbar { height: 4px; }
+  .admin-brand { margin-bottom: 0; margin-right: 6px; padding: 0; flex-shrink: 0; }
   .admin-brand-sub { display: none; }
-  .admin-nav { flex-direction: row; }
-  .admin-back { margin-top: 0; margin-left: auto; white-space: nowrap; }
-  .admin-content { padding: 20px; }
-  .admin-topbar { padding: 20px; }
+  .admin-brand-name { font-size: 0.9rem; }
+  .admin-nav { flex-direction: row; gap: 4px; flex-shrink: 0; }
+  .admin-link { padding: 8px 12px; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0; }
+  .admin-back { margin-top: 0; margin-left: 6px; white-space: nowrap; flex-shrink: 0; padding: 8px 10px; font-size: 0.82rem; }
+  .admin-content { padding: 20px 16px 40px; }
+  .admin-topbar { padding: 18px 16px; gap: 10px; }
+  .admin-topbar h1 { font-size: 1.3rem; }
+  .admin-panel { padding: 18px; }
   .form-row { grid-template-columns: 1fr; }
+  .modal { padding: 22px 18px; max-height: 92vh; }
+  .modal-head h3 { font-size: 1.1rem; }
+  .modal-overlay { padding: 12px; }
+}
+@media (max-width: 480px) {
+  .stat-grid { grid-template-columns: 1fr; gap: 12px; }
+  .stat-card { padding: 18px; }
+  .stat-value { font-size: 1.6rem; }
+  .admin-topbar h1 { font-size: 1.15rem; }
+  .admin-content { padding: 16px 12px 32px; }
+  .admin-topbar { padding: 14px 12px; }
+  .admin-table th, .admin-table td { padding: 10px 8px; font-size: 0.82rem; }
+  .modal { padding: 18px 14px; border-radius: 14px; }
+  .modal-actions { flex-direction: column-reverse; }
+  .modal-actions .btn { width: 100%; }
 }

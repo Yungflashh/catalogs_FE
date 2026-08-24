@@ -2,6 +2,11 @@
 .checkout-section { padding: 24px; }
 .checkout-section h3 { font-size: 1.15rem; margin-bottom: 18px; }
 .checkout-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 560px) {
+  .checkout-section { padding: 18px; }
+  .checkout-section h3 { font-size: 1rem; margin-bottom: 14px; }
+  .checkout-forms { gap: 14px; }
+}
 .pay-options { display: flex; flex-direction: column; gap: 10px; }
 .pay-option {
   display: flex;

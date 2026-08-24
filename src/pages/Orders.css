@@ -54,3 +54,13 @@
   .order-meta  { flex-basis: calc(100% - 80px); }
   .order-arrow { display: none; }
 }
+@media (max-width: 420px) {
+  .order-row { gap: 8px; padding: 12px 14px; }
+  .order-thumbs img, .order-more { width: 40px; height: 40px; }
+  .order-thumbs img, .order-more { margin-left: -10px; }
+  .order-thumbs img:first-child { margin-left: 0; }
+  .order-id { font-size: 0.88rem; }
+  .order-date { font-size: 0.74rem; }
+  .order-total { font-size: 0.95rem; }
+  .order-meta { flex-basis: calc(100% - 72px); }
+}

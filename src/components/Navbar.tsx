@@ -68,11 +68,11 @@ export default function Navbar() {
             <NavLink to="/admin" className="nav-link">Admin</NavLink>
           )}
 
-          <button className="icon-btn theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+          <button className="icon-btn theme-toggle hide-xs" onClick={toggleTheme} aria-label="Toggle theme">
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
-          <Link to="/wishlist" className="icon-btn" aria-label="Wishlist">
+          <Link to="/wishlist" className="icon-btn hide-xs" aria-label="Wishlist">
             <HeartIcon size={19} />
             {wishlistCount > 0 && <span className="count-bubble">{wishlistCount}</span>}
           </Link>

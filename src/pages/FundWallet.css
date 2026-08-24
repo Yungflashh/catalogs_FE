@@ -1,4 +1,6 @@
 .fw-wrap { padding-top: 72px; padding-bottom: 80px; max-width: 640px; margin: 0 auto; }
+@media (max-width: 720px) { .fw-wrap { padding-top: 36px; padding-bottom: 56px; } }
+@media (max-width: 480px) { .fw-wrap { padding-top: 20px; padding-bottom: 36px; } }
 
 /* Header / steps */
 .fw-header { display: flex; align-items: center; gap: 20px; margin-bottom: 32px; flex-wrap: wrap; }
@@ -229,6 +231,19 @@
 
 @media (max-width: 520px) {
   .fw-card { padding: 22px 16px; }
-  .fw-header { gap: 12px; }
+  .fw-header { gap: 12px; margin-bottom: 22px; }
   .fw-step-label { display: none; }
+  .fw-title { font-size: 1.25rem; }
+  .fw-sub { font-size: 0.85rem; margin-bottom: 20px; }
+  .fw-pay-header { flex-wrap: wrap; gap: 12px; }
+  .fw-timer { font-size: 1rem; padding: 6px 12px; }
+  .fw-amount-input { font-size: 1.2rem; }
+  .fw-wallet-option { padding: 12px 14px; gap: 12px; }
+  .fw-wallet-symbol { width: 38px; height: 38px; }
+  .fw-done { padding: 32px 20px; }
+  .fw-done .fw-title { font-size: 1.4rem; }
+}
+@media (max-width: 380px) {
+  .fw-card { padding: 18px 14px; }
+  .fw-address-value { font-size: 0.8rem; }
 }

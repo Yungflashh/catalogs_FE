@@ -25,7 +25,7 @@
 }
 .shop-banner-text { flex: 1; min-width: 0; }
 .shop-title {
-  font-size: 2.8rem;
+  font-size: clamp(1.7rem, 5.5vw, 2.8rem);
   line-height: 1.08;
   letter-spacing: -0.03em;
 }
@@ -40,9 +40,9 @@
   position: relative;
   display: flex;
   align-items: center;
-  flex: 1;
+  flex: 1 1 240px;
   max-width: 400px;
-  min-width: 260px;
+  min-width: 0;
 }
 .shop-search svg {
   position: absolute;
@@ -198,8 +198,17 @@
 }
 
 @media (max-width: 700px) {
-  .shop-title { font-size: 2rem; }
   .shop-banner { padding: 36px 0 28px; }
-  .shop-toolbar { gap: 12px; }
-  .shop-search { max-width: 100%; min-width: 0; }
+  .shop-banner-inner { gap: 20px; }
+  .shop-toolbar { gap: 10px; padding: 18px 0 16px; }
+  .shop-search { max-width: 100%; }
+  .shop-actions { gap: 8px; width: 100%; justify-content: space-between; }
+  .shop-sort { min-width: 0; flex: 1; max-width: 220px; }
+  .pager { margin: 36px 0 48px; gap: 8px; }
+  .pager-num { width: 32px; height: 32px; font-size: 0.8rem; }
+}
+@media (max-width: 420px) {
+  .shop-subtitle { font-size: 0.88rem; }
+  .chip { padding: 6px 12px; font-size: 0.78rem; }
+  .pager .btn { padding: 8px 14px; font-size: 0.8rem; }
 }

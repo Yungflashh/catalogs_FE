@@ -222,6 +222,15 @@
 [data-theme="light"] .qty-val { color: #ffffff; }
 
 @media (max-width: 600px) {
-  .pcard-list { flex-wrap: wrap; }
-  .pcard-list-foot { width: 100%; justify-content: space-between; }
+  .pcard-list { flex-wrap: wrap; gap: 14px; padding: 14px; }
+  .pcard-list-media { width: 88px; height: 88px; }
+  .pcard-list-foot { width: 100%; justify-content: space-between; gap: 10px; }
+  .pcard-list-name { font-size: 0.95rem !important; }
+  .pcard-body { padding: 14px; }
+  .pcard-name { font-size: 0.92rem; }
+  .pcard-price { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+  .pcard-list-media { width: 76px; height: 76px; }
+  .pcard-list { gap: 12px; }
 }

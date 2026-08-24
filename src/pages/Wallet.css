@@ -1,4 +1,6 @@
 .wallet-page-wrap { padding-top: 72px; padding-bottom: 80px; max-width: 760px; }
+@media (max-width: 720px) { .wallet-page-wrap { padding-top: 36px; padding-bottom: 56px; } }
+@media (max-width: 480px) { .wallet-page-wrap { padding-top: 20px; padding-bottom: 36px; } }
 
 .wallet-page-header {
   display: flex;
@@ -33,11 +35,12 @@
 
 .wbc-amount {
   font-family: var(--font-display);
-  font-size: 2.6rem;
+  font-size: clamp(1.7rem, 6vw, 2.6rem);
   font-weight: 800;
   letter-spacing: -0.04em;
   color: var(--text);
   margin: 6px 0 4px;
+  word-break: break-word;
 }
 
 .wbc-amount-dim { color: var(--text-dim); }
@@ -134,6 +137,14 @@
 .wallet-txn-cancelled { color: var(--text-faint); text-decoration: line-through; }
 
 @media (max-width: 600px) {
-  .wallet-top { grid-template-columns: 1fr; }
-  .wallet-page-wrap { padding: 40px 0 60px; }
+  .wallet-top { grid-template-columns: 1fr; gap: 14px; margin-bottom: 20px; }
+  .wallet-balance-card, .wallet-stat-card { padding: 22px 20px; }
+  .wallet-page-header { margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+  .wallet-txn { padding: 12px 14px; gap: 10px; }
+  .wallet-txn-left { gap: 10px; min-width: 0; flex: 1; }
+  .wallet-txn-icon { width: 34px; height: 34px; }
+  .wallet-txn-id { font-size: 0.82rem; }
+  .wallet-txn-date { font-size: 0.72rem; }
+  .wallet-txn-amount { font-size: 0.9rem; }
+  .wallet-txn-right { gap: 8px; }
 }
