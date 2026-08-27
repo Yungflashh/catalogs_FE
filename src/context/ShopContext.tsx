@@ -6,6 +6,13 @@ import { cartApi, wishlistApi } from '../api/services';
 import { useAuth } from './AuthContext';
 import { useToast } from './ToastContext';
 
+// Drop items whose referenced product was deleted (populate returns null).
+const cleanCart = (c: Cart | null): Cart | null =>
+  c ? { ...c, items: (c.items || []).filter((i) => i && i.product && i.product._id) } : c;
+
+const cleanWishlist = (w: Wishlist | null): Wishlist | null =>
+  w ? { ...w, products: (w.products || []).filter((p) => p && p._id) } : w;
+
 interface ShopCtx {
   cart: Cart | null;
   wishlist: Wishlist | null;
@@ -43,8 +50,8 @@ export const ShopProvider = ({ children }: { children: ReactNode }) => {
     }
     try {
       const [c, w] = await Promise.all([cartApi.get(), wishlistApi.get()]);
-      setCart(c);
-      setWishlist(w);
+      setCart(cleanCart(c));
+      setWishlist(cleanWishlist(w));
     } catch {
       /* ignore */
     }
@@ -62,7 +69,7 @@ export const ShopProvider = ({ children }: { children: ReactNode }) => {
       }
       try {
         const c = await cartApi.add(productId, qty);
-        setCart(c);
+        setCart(cleanCart(c));
         notify('Added to cart');
       } catch (e) {
         notify((e as Error).message, 'error');
@@ -74,7 +81,7 @@ export const ShopProvider = ({ children }: { children: ReactNode }) => {
   const updateCart = useCallback(async (productId: string, qty: number) => {
     try {
       const c = await cartApi.update(productId, qty);
-      setCart(c);
+      setCart(cleanCart(c));
     } catch (e) {
       notify((e as Error).message, 'error');
     }
@@ -83,7 +90,7 @@ export const ShopProvider = ({ children }: { children: ReactNode }) => {
   const removeFromCart = useCallback(async (productId: string) => {
     try {
       const c = await cartApi.remove(productId);
-      setCart(c);
+      setCart(cleanCart(c));
       notify('Removed from cart');
     } catch (e) {
       notify((e as Error).message, 'error');
@@ -100,12 +107,12 @@ export const ShopProvider = ({ children }: { children: ReactNode }) => {
   }, [notify]);
 
   const isWishlisted = useCallback(
-    (productId: string) => !!wishlist?.products.some((p) => p._id === productId),
+    (productId: string) => !!wishlist?.products.some((p) => p && p._id === productId),
     [wishlist]
   );
 
   const cartQuantity = useCallback(
-    (productId: string) => cart?.items.find((i) => i.product._id === productId)?.quantity || 0,
+    (productId: string) => cart?.items.find((i) => i?.product && i.product._id === productId)?.quantity || 0,
     [cart]
   );
 
@@ -118,11 +125,11 @@ export const ShopProvider = ({ children }: { children: ReactNode }) => {
       try {
         if (isWishlisted(productId)) {
           const w = await wishlistApi.remove(productId);
-          setWishlist(w);
+          setWishlist(cleanWishlist(w));
           notify('Removed from wishlist');
         } else {
           const w = await wishlistApi.add(productId);
-          setWishlist(w);
+          setWishlist(cleanWishlist(w));
           notify('Saved to wishlist');
         }
       } catch (e) {
