@@ -64,8 +64,11 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 
-html, body { max-width: 100vw; overflow-x: hidden; }
+/* Only clip on body, not both — iOS Safari freezes vertical scroll when
+   overflow-x is set on both html AND body after fixed elements mount/unmount. */
 body {
+  max-width: 100vw;
+  overflow-x: hidden;
   font-family: var(--font-body);
   color: var(--text);
   background: var(--bg-0);

@@ -7,7 +7,10 @@ import SplashScreen from './components/SplashScreen';
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    // iOS Safari can ignore scrollTo if fired synchronously during a route
+    // transition. Defer to the next frame so the new page has committed first.
+    const id = requestAnimationFrame(() => window.scrollTo(0, 0));
+    return () => cancelAnimationFrame(id);
   }, [pathname]);
   return null;
 }

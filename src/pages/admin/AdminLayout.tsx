@@ -5,6 +5,7 @@ import {
   GridIcon, BoxIcon, PackageCheck, UsersIcon, CoinIcon, WalletIcon,
   MenuIcon, CloseIcon,
 } from '../../components/Icons';
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
 import './Admin.css';
 
 const links = [
@@ -49,17 +50,13 @@ export default function AdminLayout({ title, action, children }: {
 
   useEffect(() => { setDrawer(false); }, [pathname]);
 
+  useBodyScrollLock(drawer);
+
   useEffect(() => {
-    if (drawer) {
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setDrawer(false); };
-      window.addEventListener('keydown', onKey);
-      return () => {
-        document.body.style.overflow = prev;
-        window.removeEventListener('keydown', onKey);
-      };
-    }
+    if (!drawer) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setDrawer(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, [drawer]);
 
   return (

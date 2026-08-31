@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useShop } from '../context/ShopContext';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import {
   CartIcon, HeartIcon, SearchIcon, MenuIcon, CloseIcon, UserIcon,
   BoxIcon, LogoutIcon, GridIcon,
@@ -43,13 +44,7 @@ export default function Navbar() {
     setMenuOpen(false);
   }, [location.pathname]);
 
-  useEffect(() => {
-    if (drawer) {
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      return () => { document.body.style.overflow = prev; };
-    }
-  }, [drawer]);
+  useBodyScrollLock(drawer);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
