@@ -9,11 +9,13 @@ import { PlusIcon, EditIcon, TrashIcon, CloseIcon } from '../../components/Icons
 interface FormState {
   name: string; description: string; price: string; category: string;
   brand: string; stock: string; featured: boolean; images: string[];
+  rating: string; numReviews: string;
 }
 
 const empty: FormState = {
   name: '', description: '', price: '', category: '', brand: '',
   stock: '', featured: false, images: [''],
+  rating: '', numReviews: '',
 };
 
 export default function AdminProducts() {
@@ -41,6 +43,7 @@ export default function AdminProducts() {
       name: p.name, description: p.description, price: String(p.price),
       category: p.category, brand: p.brand, stock: String(p.stock),
       featured: p.featured, images: p.images.length ? p.images : [''],
+      rating: String(p.rating ?? ''), numReviews: String(p.numReviews ?? ''),
     });
     setModal(true);
   };
@@ -68,6 +71,8 @@ export default function AdminProducts() {
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
+    const ratingNum = form.rating.trim() === '' ? 0 : Math.min(5, Math.max(0, Number(form.rating)));
+    const reviewsNum = form.numReviews.trim() === '' ? 0 : Math.max(0, Math.floor(Number(form.numReviews)));
     const payload = {
       name: form.name,
       description: form.description,
@@ -77,6 +82,8 @@ export default function AdminProducts() {
       stock: Number(form.stock),
       featured: form.featured,
       images: form.images.map((i) => i.trim()).filter(Boolean),
+      rating: ratingNum,
+      numReviews: reviewsNum,
     };
     try {
       if (editing) {
@@ -181,6 +188,34 @@ export default function AdminProducts() {
                 <div className="field">
                   <label>Brand</label>
                   <input className="input" value={form.brand} onChange={(e) => setField('brand', e.target.value)} placeholder="e.g. Aurora" />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="field">
+                  <label>Rating (0–5)</label>
+                  <input
+                    className="input"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="5"
+                    value={form.rating}
+                    onChange={(e) => setField('rating', e.target.value)}
+                    placeholder="e.g. 4.7"
+                  />
+                </div>
+                <div className="field">
+                  <label>Number of reviews</label>
+                  <input
+                    className="input"
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={form.numReviews}
+                    onChange={(e) => setField('numReviews', e.target.value)}
+                    placeholder="e.g. 128"
+                  />
                 </div>
               </div>
 

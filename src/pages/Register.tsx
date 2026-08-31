@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useShop } from '../context/ShopContext';
 import { useToast } from '../context/ToastContext';
 import './Auth.css';
 
 export default function Register() {
   const { register } = useAuth();
-  const { refresh } = useShop();
   const { notify } = useToast();
   const navigate = useNavigate();
 
@@ -26,7 +24,6 @@ export default function Register() {
     setBusy(true);
     try {
       await register(name, email, password);
-      await refresh();
       notify('Account created');
       navigate('/');
     } catch (err) {

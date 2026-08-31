@@ -1,17 +1,22 @@
 import { useEffect, useState, useCallback } from 'react';
+import { Mail } from 'lucide-react';
 import { User } from '../../types';
 import { adminApi } from '../../api/services';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { Loader } from '../../components/Shared';
 import AdminLayout from './AdminLayout';
-import { TrashIcon } from '../../components/Icons';
+import { TrashIcon, CloseIcon } from '../../components/Icons';
 
 export default function AdminUsers() {
   const { user: current } = useAuth();
   const { notify } = useToast();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [emailTarget, setEmailTarget] = useState<User | null>(null);
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -41,6 +46,32 @@ export default function AdminUsers() {
     }
   };
 
+  const openEmail = (u: User) => {
+    setEmailTarget(u);
+    setSubject('');
+    setMessage('');
+  };
+
+  const closeEmail = () => {
+    if (sending) return;
+    setEmailTarget(null);
+  };
+
+  const sendEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailTarget) return;
+    setSending(true);
+    try {
+      await adminApi.emailUser(emailTarget._id, subject, message);
+      notify(`Email sent to ${emailTarget.email}`);
+      setEmailTarget(null);
+    } catch (err) {
+      notify((err as Error).message, 'error');
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <AdminLayout title="Users">
       {loading ? <Loader /> : (
@@ -66,11 +97,21 @@ export default function AdminUsers() {
                       </select>
                     </td>
                     <td>
-                      <button className="icon-action danger" disabled={u.role === 'admin'}
-                        onClick={() => remove(u)} aria-label="Delete"
-                        style={u.role === 'admin' ? { opacity: 0.4, cursor: 'not-allowed' } : {}}>
-                        <TrashIcon size={15} />
-                      </button>
+                      <div className="tbl-actions">
+                        <button
+                          className="icon-action"
+                          onClick={() => openEmail(u)}
+                          aria-label={`Email ${u.name}`}
+                          title="Send email"
+                        >
+                          <Mail size={15} />
+                        </button>
+                        <button className="icon-action danger" disabled={u.role === 'admin'}
+                          onClick={() => remove(u)} aria-label="Delete"
+                          style={u.role === 'admin' ? { opacity: 0.4, cursor: 'not-allowed' } : {}}>
+                          <TrashIcon size={15} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -80,6 +121,59 @@ export default function AdminUsers() {
               )}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {emailTarget && (
+        <div className="modal-overlay" onClick={closeEmail}>
+          <div className="modal glass" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-head">
+              <div>
+                <h3>Email user</h3>
+                <div style={{ color: 'var(--text-faint)', fontSize: '0.82rem', marginTop: 4 }}>
+                  To: {emailTarget.name} &lt;{emailTarget.email}&gt;
+                </div>
+              </div>
+              <button className="modal-close" onClick={closeEmail} disabled={sending}><CloseIcon size={22} /></button>
+            </div>
+            <form onSubmit={sendEmail}>
+              <div className="field">
+                <label>Subject</label>
+                <input
+                  className="input"
+                  required
+                  maxLength={200}
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  placeholder="e.g. Update on your recent order"
+                  disabled={sending}
+                />
+              </div>
+              <div className="field">
+                <label>Message</label>
+                <textarea
+                  className="textarea"
+                  required
+                  maxLength={10000}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Write your message..."
+                  rows={8}
+                  disabled={sending}
+                  style={{ minHeight: 180 }}
+                />
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-faint)', marginTop: 6, textAlign: 'right' }}>
+                  {message.length} / 10,000
+                </div>
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="btn btn-ghost" onClick={closeEmail} disabled={sending}>Cancel</button>
+                <button className="btn btn-primary" disabled={sending || !subject.trim() || !message.trim()}>
+                  {sending ? 'Sending…' : 'Send email'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </AdminLayout>

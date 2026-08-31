@@ -89,6 +89,8 @@ export const adminApi = {
   deleteUser: (id: string) => api.delete(`/admin/users/${id}`).then((r) => r.data),
   updateRole: (id: string, role: string) =>
     api.put<User>(`/admin/users/${id}/role`, { role }).then((r) => r.data),
+  emailUser: (id: string, subject: string, message: string) =>
+    api.post<{ message: string }>(`/admin/users/${id}/email`, { subject, message }).then((r) => r.data),
 };
 
 // ---- Crypto Wallets ----

@@ -36,9 +36,15 @@ export default function ProductCard({ product, listView = false }: Props) {
           </div>
           <Link to={`/product/${product._id}`} className="pcard-name pcard-list-name">{product.name}</Link>
           <div className="pcard-rating">
-            <StarIcon size={13} filled />
-            <span>{product.rating > 0 ? product.rating.toFixed(1) : 'New'}</span>
-            <span className="pcard-brand">· {product.brand}</span>
+            {product.rating > 0 && (
+              <>
+                <StarIcon size={13} filled />
+                <span>{product.rating.toFixed(1)}</span>
+                {product.numReviews > 0 && <span className="pcard-brand">({product.numReviews})</span>}
+                <span className="pcard-brand">·</span>
+              </>
+            )}
+            <span className="pcard-brand">{product.brand}</span>
           </div>
         </div>
 
@@ -98,9 +104,15 @@ export default function ProductCard({ product, listView = false }: Props) {
         <span className="pcard-cat">{product.category}</span>
         <Link to={`/product/${product._id}`} className="pcard-name">{product.name}</Link>
         <div className="pcard-rating">
-          <StarIcon size={13} filled />
-          <span>{product.rating > 0 ? product.rating.toFixed(1) : 'New'}</span>
-          <span className="pcard-brand">· {product.brand}</span>
+          {product.rating > 0 && (
+            <>
+              <StarIcon size={13} filled />
+              <span>{product.rating.toFixed(1)}</span>
+              {product.numReviews > 0 && <span className="pcard-brand">({product.numReviews})</span>}
+              <span className="pcard-brand">·</span>
+            </>
+          )}
+          <span className="pcard-brand">{product.brand}</span>
         </div>
         <div className="pcard-foot">
           <span className="pcard-price">${product.price.toFixed(2)}</span>
