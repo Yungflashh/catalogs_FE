@@ -197,18 +197,43 @@
   border-color: transparent;
 }
 
-@media (max-width: 700px) {
+/* Pagination: scroll horizontally when there are many pages */
+.pager-pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  max-width: 100%;
+  scrollbar-width: none;
+}
+.pager-pages::-webkit-scrollbar { display: none; }
+.pager-num { flex-shrink: 0; }
+
+@media (max-width: 720px) {
   .shop-banner { padding: 36px 0 28px; }
-  .shop-banner-inner { gap: 20px; }
-  .shop-toolbar { gap: 10px; padding: 18px 0 16px; }
-  .shop-search { max-width: 100%; }
+  .shop-banner-inner { gap: 20px; flex-direction: column; align-items: stretch; }
+  .shop-banner-text { text-align: left; }
+  .shop-search { max-width: 100%; flex: 1 1 auto; }
+  .shop-toolbar { gap: 12px; padding: 18px 0 16px; align-items: stretch; }
   .shop-actions { gap: 8px; width: 100%; justify-content: space-between; }
-  .shop-sort { min-width: 0; flex: 1; max-width: 220px; }
+  .shop-sort { min-width: 0; flex: 1; max-width: none; }
   .pager { margin: 36px 0 48px; gap: 8px; }
   .pager-num { width: 32px; height: 32px; font-size: 0.8rem; }
 }
-@media (max-width: 420px) {
+@media (max-width: 480px) {
+  .shop-banner { padding: 28px 0 22px; }
   .shop-subtitle { font-size: 0.88rem; }
   .chip { padding: 6px 12px; font-size: 0.78rem; }
+  .shop-sort { font-size: 0.8rem; }
+  .view-btn { width: 30px; height: 30px; }
+  .shop-results-info { font-size: 0.78rem; margin-bottom: 14px; }
+  .pager { margin: 28px 0 40px; gap: 6px; }
   .pager .btn { padding: 8px 14px; font-size: 0.8rem; }
+  .pager-num { width: 30px; height: 30px; font-size: 0.78rem; }
+}
+@media (max-width: 380px) {
+  .shop-banner-inner { gap: 16px; }
+  .shop-toolbar { padding: 14px 0 12px; }
+  .chip { padding: 5px 10px; font-size: 0.74rem; }
+  .pager .btn { padding: 7px 10px; font-size: 0.75rem; }
 }

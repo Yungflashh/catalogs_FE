@@ -1,8 +1,16 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { Footer, ProtectedRoute, AdminRoute } from './components/Shared';
 import SplashScreen from './components/SplashScreen';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [pathname]);
+  return null;
+}
 
 import Landing from './pages/Landing';
 import Shop from './pages/Shop';
@@ -37,6 +45,7 @@ export default function App() {
   return (
     <>
       {!ready && <SplashScreen onDone={handleSplashDone} />}
+      <ScrollToTop />
       <Navbar />
       <main style={{ minHeight: 'calc(100vh - 68px)' }}>
         <Routes>

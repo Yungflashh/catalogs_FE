@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useShop } from '../context/ShopContext';
 import {
@@ -13,6 +14,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const { cartCount, wishlistCount } = useShop();
   const navigate = useNavigate();
+  const location = useLocation();
   const [term, setTerm] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [drawer, setDrawer] = useState(false);
@@ -35,6 +37,19 @@ export default function Navbar() {
     document.addEventListener('mousedown', close);
     return () => document.removeEventListener('mousedown', close);
   }, []);
+
+  useEffect(() => {
+    setDrawer(false);
+    setMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (drawer) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = prev; };
+    }
+  }, [drawer]);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,7 +143,7 @@ export default function Navbar() {
         </nav>
       </div>
 
-      {drawer && (
+      {drawer && createPortal(
         <div className="mobile-drawer">
           <form className="nav-search mobile-only" onSubmit={submit} style={{ display: 'flex', maxWidth: '100%', marginBottom: 10 }}>
             <SearchIcon size={18} />
@@ -140,7 +155,8 @@ export default function Navbar() {
           {user && <NavLink to="/orders" className="nav-link" onClick={() => setDrawer(false)}>Purchase History</NavLink>}
           {user?.role === 'admin' && <NavLink to="/admin" className="nav-link" onClick={() => setDrawer(false)}>Admin</NavLink>}
           {!user && <NavLink to="/login" className="nav-link" onClick={() => setDrawer(false)}>Sign in</NavLink>}
-        </div>
+        </div>,
+        document.body
       )}
     </header>
   );

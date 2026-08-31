@@ -534,7 +534,6 @@
    10. BROWSE
 ───────────────────────────────────── */
 .lp-browse { background: var(--bg-1); }
-.grid-products { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
 .cat-row { display: flex; flex-wrap: wrap; gap: 10px; }
 .cat-chip {
   padding: 9px 18px; font-family: var(--font-display); font-weight: 500;
@@ -619,7 +618,6 @@
   .steps-grid     { grid-template-columns: repeat(2, 1fr); }
   .step-arrow     { display: none; }
   .how-grid       { grid-template-columns: 1fr; max-width: 460px; margin: 0 auto; }
-  .grid-products  { grid-template-columns: repeat(3, 1fr); }
   .faq-wrap       { grid-template-columns: 1fr; gap: 40px; }
   .faq-head       { position: static; }
   .faq-head-img-wrap { display: none; }
@@ -646,7 +644,6 @@
   .cta-inner     { flex-direction: column; padding: 48px 32px; text-align: center; gap: 28px; }
   .cta-actions   { flex-direction: row; justify-content: center; flex-wrap: wrap; }
   .cta-trust-row { justify-content: center; }
-  .grid-products { grid-template-columns: repeat(2, 1fr); }
   .bvs-grid      { grid-template-columns: 1fr; }
   .testi-grid    { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
   .banks-info-row { grid-template-columns: 1fr; }
@@ -672,7 +669,6 @@
   .stats-grid    { grid-template-columns: 1fr; }
   .stat-item     { border-right: none; border-bottom: 1px solid var(--glass-border); padding: 22px 16px; }
   .stat-item:last-child { border-bottom: none; }
-  .grid-products { grid-template-columns: 1fr; gap: 16px; }
   .hero-float-badge { display: none; }
   .cta-inner     { padding: 36px 22px; gap: 22px; }
   .cta-copy h2   { font-size: 1.4rem; }

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { BadgeCheck } from 'lucide-react';
 import { Product } from '../types';
 import { useShop } from '../context/ShopContext';
 import { CartIcon, HeartIcon, StarIcon } from './Icons';
@@ -30,6 +31,7 @@ export default function ProductCard({ product, listView = false }: Props) {
         <div className="pcard-list-body">
           <div className="pcard-list-top">
             <span className="pcard-cat">{product.category}</span>
+            <span className="pcard-verified"><BadgeCheck size={11} /> Verified</span>
             {product.featured && <span className="badge badge-violet">Featured</span>}
           </div>
           <Link to={`/product/${product._id}`} className="pcard-name pcard-list-name">{product.name}</Link>
@@ -80,6 +82,7 @@ export default function ProductCard({ product, listView = false }: Props) {
           loading="lazy"
         />
         {product.featured && <span className="badge badge-violet pcard-feat">Featured</span>}
+        <span className="pcard-verified pcard-verified-media"><BadgeCheck size={11} /> Verified</span>
         {out && <span className="pcard-out">Out of stock</span>}
 
         <button

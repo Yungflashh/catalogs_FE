@@ -175,7 +175,7 @@
     inset: 68px 0 0 0;
     background: var(--drawer-bg);
     backdrop-filter: blur(20px);
-    z-index: 90;
+    z-index: 200;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -184,6 +184,7 @@
     overflow-y: auto;
   }
   .mobile-drawer .nav-link { display: block; font-size: 1.05rem; padding: 14px; }
+  .mobile-drawer .nav-search { flex: 0 0 auto; width: 100%; max-width: 100%; }
   .mobile-only { display: block; }
 }
 
