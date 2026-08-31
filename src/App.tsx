@@ -43,6 +43,12 @@ export default function App() {
 
   const handleSplashDone = useCallback(() => {
     setReady(true);
+    // iOS Safari can retain a scroll-locked state after a fixed overlay
+    // (the splash) unmounts. Nudging scroll on the next frame forces the
+    // browser to reset its touch scroll gesture handler.
+    requestAnimationFrame(() => {
+      window.scrollTo(window.scrollX, window.scrollY);
+    });
   }, []);
 
   return (
