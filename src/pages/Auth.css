@@ -20,17 +20,6 @@
 .auth-alt { text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-dim); }
 .auth-alt a { color: var(--violet); font-weight: 600; }
 .auth-alt a:hover { color: var(--cyan); }
-.auth-demo {
-  margin-top: 22px;
-  padding: 14px 16px;
-  border-radius: var(--radius-sm);
-  background: rgba(56, 225, 214, 0.08);
-  border: 1px solid rgba(56, 225, 214, 0.2);
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  line-height: 1.7;
-}
-.auth-demo strong { color: var(--cyan); font-family: var(--font-display); }
 .form-error {
   background: rgba(255, 93, 115, 0.12);
   border: 1px solid rgba(255, 93, 115, 0.3);

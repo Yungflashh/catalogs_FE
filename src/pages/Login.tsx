@@ -55,10 +55,6 @@ export default function Login() {
         <p className="auth-alt">
           New here? <Link to="/register">Create an account</Link>
         </p>
-        <div className="auth-demo">
-          <div><strong>Admin</strong> — admin@catalog.com / admin123</div>
-          <div><strong>User</strong> — user@catalog.com / user123</div>
-        </div>
       </div>
     </div>
   );
