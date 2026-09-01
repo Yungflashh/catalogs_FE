@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { Footer, ProtectedRoute, AdminRoute } from './components/Shared';
 import SplashScreen from './components/SplashScreen';
+import ScrollDebugHUD from './components/ScrollDebugHUD';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -76,6 +77,7 @@ export default function App() {
       {!ready && <SplashScreen onDone={handleSplashDone} />}
       <IOSScrollHint />
       <ScrollToTop />
+      <ScrollDebugHUD />
       <Navbar />
       <main style={{ minHeight: 'calc(100vh - 68px)' }}>
         <Routes>
