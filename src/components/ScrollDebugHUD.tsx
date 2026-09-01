@@ -119,7 +119,8 @@ export default function ScrollDebugHUD() {
 
     const hb = setInterval(() => setHeartbeats((h) => h + 1), 500);
 
-    // Poll body/html state — is something locking scroll?
+    // Cheap poll — just read body.style directly (no querySelectorAll, no getComputedStyle).
+    // The heavy scans previously here were themselves causing the frame gaps we measured.
     const spy = setInterval(() => {
       const b = document.body;
       setBodyStyle({
@@ -127,14 +128,17 @@ export default function ScrollDebugHUD() {
         ovf: b.style.overflow || '(unset)',
         top: b.style.top || '(unset)',
       });
-      const cs = getComputedStyle(b);
+    }, 1000);
+
+    // One-time DOM scan on load (not repeated) to count blurs/fixed for context.
+    const scanOnce = () => {
+      const cs = getComputedStyle(document.body);
       const cshtml = getComputedStyle(document.documentElement);
       setComputed({
         htmlOvf: `${cshtml.overflowX}/${cshtml.overflowY}`,
         bodyOvf: `${cs.overflowX}/${cs.overflowY}`,
         touchAction: `${cshtml.touchAction}/${cs.touchAction}`,
       });
-      // Count elements using backdrop-filter (iOS compositor killer)
       const all = document.querySelectorAll('*');
       let blurs = 0;
       let fixed = 0;
@@ -146,12 +150,14 @@ export default function ScrollDebugHUD() {
       });
       setBlurCount(blurs);
       setFixedCount(fixed);
-      // images
       const imgAll = document.querySelectorAll('img');
       let loaded = 0;
       imgAll.forEach((i) => { if ((i as HTMLImageElement).complete) loaded++; });
       setImgs({ total: imgAll.length, loaded });
-    }, 500);
+    };
+    // Scan once shortly after mount, then again after load
+    const scan1 = setTimeout(scanOnce, 1500);
+    window.addEventListener('load', scanOnce, { once: true });
 
     return () => {
       window.removeEventListener('touchstart', onTouch, { capture: true } as any);
@@ -161,6 +167,8 @@ export default function ScrollDebugHUD() {
       cancelAnimationFrame(raf);
       clearInterval(hb);
       clearInterval(spy);
+      clearTimeout(scan1);
+      window.removeEventListener('load', scanOnce);
       mo.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
