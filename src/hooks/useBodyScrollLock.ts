@@ -18,6 +18,8 @@ let savedStyles: {
 
 export function useBodyScrollLock(active: boolean) {
   useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.warn('[useBodyScrollLock] called active=', active, 'lockCount=', lockCount, new Error('trace').stack);
     if (!active) return;
 
     if (lockCount === 0) {

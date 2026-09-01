@@ -40,6 +40,19 @@ export default function ScrollDebugHUD() {
   useEffect(() => {
     push('HUD mounted');
     push(`readyState=${document.readyState}`);
+    push(`body@mount pos=${document.body.style.position || '_'} ovf=${document.body.style.overflow || '_'}`);
+
+    // Watch body/html style attribute for any mutation. This will catch
+    // whoever is scroll-locking the page and when.
+    const mo = new MutationObserver((records) => {
+      records.forEach((r) => {
+        const el = r.target as HTMLElement;
+        const which = el === document.body ? 'BODY' : 'HTML';
+        push(`${which}.style CHANGED: pos=${el.style.position || '_'} ovf=${el.style.overflow || '_'} top=${el.style.top || '_'}`);
+      });
+    });
+    mo.observe(document.body, { attributes: true, attributeFilter: ['style'] });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
 
     const onTouch = () => {
       if (!touchedRef.current) {
@@ -148,6 +161,7 @@ export default function ScrollDebugHUD() {
       cancelAnimationFrame(raf);
       clearInterval(hb);
       clearInterval(spy);
+      mo.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
