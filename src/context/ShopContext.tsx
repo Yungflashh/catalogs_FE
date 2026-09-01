@@ -1,6 +1,7 @@
 import {
   createContext, useContext, useState, useCallback, useEffect, ReactNode,
 } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Cart, Wishlist } from '../types';
 import { cartApi, wishlistApi } from '../api/services';
 import { useAuth } from './AuthContext';
@@ -39,8 +40,15 @@ export const useShop = () => {
 export const ShopProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
   const { notify } = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [cart, setCart] = useState<Cart | null>(null);
   const [wishlist, setWishlist] = useState<Wishlist | null>(null);
+
+  const requireAuth = useCallback((message: string) => {
+    notify(message);
+    navigate('/login', { state: { from: location.pathname + location.search } });
+  }, [notify, navigate, location.pathname, location.search]);
 
   const refresh = useCallback(async () => {
     if (!user) {
@@ -64,7 +72,7 @@ export const ShopProvider = ({ children }: { children: ReactNode }) => {
   const addToCart = useCallback(
     async (productId: string, qty = 1) => {
       if (!user) {
-        notify('Please sign in to add items', 'error');
+        requireAuth('Sign in to add items to your cart');
         return;
       }
       try {
@@ -75,7 +83,7 @@ export const ShopProvider = ({ children }: { children: ReactNode }) => {
         notify((e as Error).message, 'error');
       }
     },
-    [user, notify]
+    [user, notify, requireAuth]
   );
 
   const updateCart = useCallback(async (productId: string, qty: number) => {
@@ -119,7 +127,7 @@ export const ShopProvider = ({ children }: { children: ReactNode }) => {
   const toggleWishlist = useCallback(
     async (productId: string) => {
       if (!user) {
-        notify('Please sign in to save items', 'error');
+        requireAuth('Sign in to save to your wishlist');
         return;
       }
       try {
@@ -136,7 +144,7 @@ export const ShopProvider = ({ children }: { children: ReactNode }) => {
         notify((e as Error).message, 'error');
       }
     },
-    [user, isWishlisted, notify]
+    [user, isWishlisted, notify, requireAuth]
   );
 
   const cartCount = cart?.items.reduce((s, i) => s + i.quantity, 0) || 0;

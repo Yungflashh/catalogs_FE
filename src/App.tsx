@@ -79,7 +79,8 @@ export default function App() {
       <Navbar />
       <main style={{ minHeight: 'calc(100vh - 68px)' }}>
         <Routes>
-          <Route path="/" element={<Landing />} />
+          <Route path="/" element={<Shop />} />
+          <Route path="/landing" element={<Landing />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/login" element={<Login />} />
