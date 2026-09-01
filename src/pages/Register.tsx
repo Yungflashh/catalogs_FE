@@ -25,7 +25,7 @@ export default function Register() {
     try {
       await register(name, email, password);
       notify('Account created');
-      navigate('/');
+      navigate('/shop');
     } catch (err) {
       setError((err as Error).message);
     } finally {
