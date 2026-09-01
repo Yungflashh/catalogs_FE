@@ -22,22 +22,22 @@ const STATS = [
 ];
 
 const BANKS = [
-  { name: 'Chase',           color: '#117ACA', logo: 'https://logo.clearbit.com/chase.com' },
-  { name: 'Bank of America', color: '#C0272D', logo: 'https://logo.clearbit.com/bankofamerica.com' },
-  { name: 'Wells Fargo',     color: '#CF4520', logo: 'https://logo.clearbit.com/wellsfargo.com' },
-  { name: 'Citibank',        color: '#056DAE', logo: 'https://logo.clearbit.com/citi.com' },
-  { name: 'Capital One',     color: '#D03027', logo: 'https://logo.clearbit.com/capitalone.com' },
-  { name: 'TD Bank',         color: '#2C7A3E', logo: 'https://logo.clearbit.com/td.com' },
-  { name: 'PNC Bank',        color: '#F05A28', logo: 'https://logo.clearbit.com/pnc.com' },
-  { name: 'US Bank',         color: '#A6192E', logo: 'https://logo.clearbit.com/usbank.com' },
-  { name: 'Goldman Sachs',   color: '#6DAEDB', logo: 'https://logo.clearbit.com/goldmansachs.com' },
-  { name: 'HSBC',            color: '#DB0011', logo: 'https://logo.clearbit.com/hsbc.com' },
-  { name: 'Barclays',        color: '#00AEEF', logo: 'https://logo.clearbit.com/barclays.com' },
-  { name: 'Amex',            color: '#016FD0', logo: 'https://logo.clearbit.com/americanexpress.com' },
-  { name: 'Santander',       color: '#EC0000', logo: 'https://logo.clearbit.com/santander.com' },
-  { name: 'Deutsche Bank',   color: '#0018A8', logo: 'https://logo.clearbit.com/db.com' },
-  { name: 'Ally Bank',       color: '#7D1979', logo: 'https://logo.clearbit.com/ally.com' },
-  { name: 'Regions Bank',    color: '#006937', logo: 'https://logo.clearbit.com/regions.com' },
+  { name: 'Chase',           color: '#117ACA', logo: 'https://www.google.com/s2/favicons?sz=64&domain=chase.com' },
+  { name: 'Bank of America', color: '#C0272D', logo: 'https://www.google.com/s2/favicons?sz=64&domain=bankofamerica.com' },
+  { name: 'Wells Fargo',     color: '#CF4520', logo: 'https://www.google.com/s2/favicons?sz=64&domain=wellsfargo.com' },
+  { name: 'Citibank',        color: '#056DAE', logo: 'https://www.google.com/s2/favicons?sz=64&domain=citi.com' },
+  { name: 'Capital One',     color: '#D03027', logo: 'https://www.google.com/s2/favicons?sz=64&domain=capitalone.com' },
+  { name: 'TD Bank',         color: '#2C7A3E', logo: 'https://www.google.com/s2/favicons?sz=64&domain=td.com' },
+  { name: 'PNC Bank',        color: '#F05A28', logo: 'https://www.google.com/s2/favicons?sz=64&domain=pnc.com' },
+  { name: 'US Bank',         color: '#A6192E', logo: 'https://www.google.com/s2/favicons?sz=64&domain=usbank.com' },
+  { name: 'Goldman Sachs',   color: '#6DAEDB', logo: 'https://www.google.com/s2/favicons?sz=64&domain=goldmansachs.com' },
+  { name: 'HSBC',            color: '#DB0011', logo: 'https://www.google.com/s2/favicons?sz=64&domain=hsbc.com' },
+  { name: 'Barclays',        color: '#00AEEF', logo: 'https://www.google.com/s2/favicons?sz=64&domain=barclays.com' },
+  { name: 'Amex',            color: '#016FD0', logo: 'https://www.google.com/s2/favicons?sz=64&domain=americanexpress.com' },
+  { name: 'Santander',       color: '#EC0000', logo: 'https://www.google.com/s2/favicons?sz=64&domain=santander.com' },
+  { name: 'Deutsche Bank',   color: '#0018A8', logo: 'https://www.google.com/s2/favicons?sz=64&domain=db.com' },
+  { name: 'Ally Bank',       color: '#7D1979', logo: 'https://www.google.com/s2/favicons?sz=64&domain=ally.com' },
+  { name: 'Regions Bank',    color: '#006937', logo: 'https://www.google.com/s2/favicons?sz=64&domain=regions.com' },
 ];
 
 const LOG_TYPES = [
@@ -394,10 +394,10 @@ export default function Landing() {
 
                 <div className="dash-entries">
                   {[
-                    { name: 'Chase Business — $48,200',  abbr: 'JPM',  color: '#117ACA', logo: 'https://logo.clearbit.com/chase.com' },
-                    { name: 'Bank of America — $22,400', abbr: 'BOA',  color: '#C0272D', logo: 'https://logo.clearbit.com/bankofamerica.com' },
-                    { name: 'Barclays — $15,000',        abbr: 'BARC', color: '#00AEEF', logo: 'https://logo.clearbit.com/barclays.com' },
-                    { name: 'Wells Fargo — $9,850',      abbr: 'WF',   color: '#CF4520', logo: 'https://logo.clearbit.com/wellsfargo.com' },
+                    { name: 'Chase Business — $48,200',  abbr: 'JPM',  color: '#117ACA', logo: 'https://www.google.com/s2/favicons?sz=64&domain=chase.com' },
+                    { name: 'Bank of America — $22,400', abbr: 'BOA',  color: '#C0272D', logo: 'https://www.google.com/s2/favicons?sz=64&domain=bankofamerica.com' },
+                    { name: 'Barclays — $15,000',        abbr: 'BARC', color: '#00AEEF', logo: 'https://www.google.com/s2/favicons?sz=64&domain=barclays.com' },
+                    { name: 'Wells Fargo — $9,850',      abbr: 'WF',   color: '#CF4520', logo: 'https://www.google.com/s2/favicons?sz=64&domain=wellsfargo.com' },
                   ].map((e, i) => <DashRow key={i} entry={e} />)}
                 </div>
 
