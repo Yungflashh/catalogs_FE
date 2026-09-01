@@ -77,7 +77,7 @@ export default function App() {
       {!ready && <SplashScreen onDone={handleSplashDone} />}
       <IOSScrollHint />
       <ScrollToTop />
-      <ScrollDebugHUD />
+      {typeof window !== 'undefined' && window.location.search.includes('debug=1') && <ScrollDebugHUD />}
       <Navbar />
       <main style={{ minHeight: 'calc(100vh - 68px)' }}>
         <Routes>
