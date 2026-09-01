@@ -15,6 +15,26 @@ function ScrollToTop() {
   return null;
 }
 
+// Register empty passive touch listeners on window. iOS Safari otherwise
+// treats touch events as potentially blocking (waits to see if the page
+// calls preventDefault) which can cost the first scroll gesture on load.
+// Explicit passive:true tells iOS to commit to the fast scroll path.
+function IOSScrollHint() {
+  useEffect(() => {
+    const noop = () => {};
+    const opts: AddEventListenerOptions = { passive: true };
+    window.addEventListener('touchstart', noop, opts);
+    window.addEventListener('touchmove', noop, opts);
+    window.addEventListener('touchend', noop, opts);
+    return () => {
+      window.removeEventListener('touchstart', noop, opts);
+      window.removeEventListener('touchmove', noop, opts);
+      window.removeEventListener('touchend', noop, opts);
+    };
+  }, []);
+  return null;
+}
+
 import Landing from './pages/Landing';
 import Shop from './pages/Shop';
 import ProductDetail from './pages/ProductDetail';
@@ -54,6 +74,7 @@ export default function App() {
   return (
     <>
       {!ready && <SplashScreen onDone={handleSplashDone} />}
+      <IOSScrollHint />
       <ScrollToTop />
       <Navbar />
       <main style={{ minHeight: 'calc(100vh - 68px)' }}>
