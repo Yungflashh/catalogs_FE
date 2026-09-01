@@ -3,7 +3,6 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { Footer, ProtectedRoute, AdminRoute } from './components/Shared';
 import SplashScreen from './components/SplashScreen';
-import ScrollDebug from './components/ScrollDebug';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -54,7 +53,6 @@ export default function App() {
 
   return (
     <>
-      <ScrollDebug />
       {!ready && <SplashScreen onDone={handleSplashDone} />}
       <ScrollToTop />
       <Navbar />
