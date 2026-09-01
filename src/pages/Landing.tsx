@@ -245,7 +245,7 @@ function BankLogo({ bank }: { bank: typeof BANKS[0] }) {
     >
       {failed
         ? <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.56rem' }}>{bank.name.split(' ')[0]}</span>
-        : <img src={bank.logo} alt={bank.name} onError={() => setFailed(true)} style={{ width: '62%', height: '62%', objectFit: 'contain' }} />
+        : <img src={bank.logo} alt={bank.name} loading="lazy" decoding="async" onError={() => setFailed(true)} style={{ width: '62%', height: '62%', objectFit: 'contain' }} />
       }
     </div>
   );
@@ -259,7 +259,7 @@ function DashRow({ entry }: { entry: { name: string; abbr: string; color: string
         <div className="dash-bank-logo" style={failed ? { background: entry.color + '22', color: entry.color, border: `1px solid ${entry.color}44` } : { background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', overflow: 'hidden', padding: 0 }}>
           {failed
             ? <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.52rem' }}>{entry.abbr}</span>
-            : <img src={entry.logo} alt={entry.abbr} onError={() => setFailed(true)} style={{ width: '65%', height: '65%', objectFit: 'contain' }} />
+            : <img src={entry.logo} alt={entry.abbr} loading="lazy" decoding="async" onError={() => setFailed(true)} style={{ width: '65%', height: '65%', objectFit: 'contain' }} />
           }
         </div>
         <span className="dash-name">{entry.name}</span>
@@ -274,7 +274,7 @@ function AvatarImg({ src, initials, size = 42 }: { src: string; initials: string
   return (
     <div style={{ width: size, height: size, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, background: 'var(--green)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       {!failed
-        ? <img src={src} alt={initials} onError={() => setFailed(true)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ? <img src={src} alt={initials} loading="lazy" decoding="async" onError={() => setFailed(true)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         : <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.76rem', color: '#07100D' }}>{initials}</span>
       }
     </div>
@@ -315,7 +315,7 @@ export default function Landing() {
         <div className="hero-glow-1" />
         <div className="hero-glow-2" />
         <div className="hero-bg-img">
-          <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&h=800&fit=crop" alt="" aria-hidden="true" />
+          <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&h=600&fit=crop" alt="" aria-hidden="true" fetchPriority="low" decoding="async" />
         </div>
 
         <div className="container">
@@ -374,7 +374,7 @@ export default function Landing() {
             {/* RIGHT */}
             <div className="hero-card-wrap fade-up" style={{ animationDelay: '0.12s' }}>
               <div className="hero-photo-card">
-                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=560&h=220&fit=crop" alt="Bank logs" className="hero-photo-img" />
+                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=560&h=220&fit=crop" alt="Bank logs" className="hero-photo-img" fetchPriority="high" decoding="async" />
                 <div className="hero-photo-overlay">
                   <div className="hero-photo-badge glass">
                     <BadgeCheck size={14} className="green-icon" />
@@ -500,7 +500,7 @@ export default function Landing() {
               { img: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=120&fit=crop', title: 'Asia-Pacific',  desc: 'DBS, ANZ, NAB, Commonwealth Bank, ICBC, MUFG, Macquarie & more' },
             ].map((c, i) => (
               <div key={i} className="banks-info-card glass">
-                <img src={c.img} alt={c.title} className="banks-info-img" />
+                <img src={c.img} alt={c.title} className="banks-info-img" loading="lazy" decoding="async" />
                 <div className="banks-info-body"><strong>{c.title}</strong><span>{c.desc}</span></div>
               </div>
             ))}
@@ -525,7 +525,7 @@ export default function Landing() {
             {LOG_TYPES.map((lt, i) => (
               <div key={i} className="logtype-card glass">
                 <div className="logtype-img-wrap">
-                  <img src={lt.image} alt={lt.title} className="logtype-img" />
+                  <img src={lt.image} alt={lt.title} className="logtype-img" loading="lazy" decoding="async" />
                   <span className="logtype-tag" style={{ background: lt.tagColor + '22', color: lt.tagColor, border: `1px solid ${lt.tagColor}44` }}>{lt.tag}</span>
                 </div>
                 <div className="logtype-body">
@@ -559,7 +559,7 @@ export default function Landing() {
             {STEPS.map((s, i) => (
               <div key={i} className="how-card glass">
                 <div className="how-img-wrap">
-                  <img src={s.img} alt={s.title} className="how-img" />
+                  <img src={s.img} alt={s.title} className="how-img" loading="lazy" decoding="async" />
                   <div className="how-num-badge">{s.num}</div>
                 </div>
                 <div className="how-body">
@@ -625,7 +625,7 @@ export default function Landing() {
 
             <div className="why-right">
               <div className="why-img-wrap">
-                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=560&h=280&fit=crop" alt="Security" className="why-img" />
+                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=560&h=280&fit=crop" alt="Security" className="why-img" loading="lazy" decoding="async" />
                 <div className="why-img-badge glass">
                   <Lock size={15} className="green-icon" />
                   <span>Crypto-only · 256-bit encrypted</span>
@@ -739,7 +739,7 @@ export default function Landing() {
                 Everything you need to know before your first order.
               </p>
               <div className="faq-head-img-wrap">
-                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=360&h=180&fit=crop" alt="Support" className="faq-head-img" />
+                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=360&h=180&fit=crop" alt="Support" className="faq-head-img" loading="lazy" decoding="async" />
               </div>
               <div className="faq-head-stats">
                 <div className="faq-head-stat"><strong>8</strong><span>Questions</span></div>
@@ -768,7 +768,7 @@ export default function Landing() {
         <div className="container">
           <div className="cta-inner glass">
             <div className="cta-bg-img">
-              <img src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1400&h=500&fit=crop" alt="" aria-hidden="true" />
+              <img src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1400&h=500&fit=crop" alt="" aria-hidden="true" loading="lazy" decoding="async" />
             </div>
             <div className="cta-glow" /><div className="cta-glow-2" />
             <div className="cta-copy">
