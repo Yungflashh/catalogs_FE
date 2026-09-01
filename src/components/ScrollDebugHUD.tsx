@@ -9,6 +9,8 @@ export default function ScrollDebugHUD() {
   const [touchMs, setTouchMs] = useState<number | null>(null);
   const [scrollMs, setScrollMs] = useState<number | null>(null);
   const [userScrollMs, setUserScrollMs] = useState<number | null>(null);
+  const [touchmoveCount, setTouchmoveCount] = useState(0);
+  const [firstMoveMs, setFirstMoveMs] = useState<number | null>(null);
   const [scrollY, setScrollY] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
   const [nav, setNav] = useState<PerformanceNavigationTiming | null>(null);
@@ -17,58 +19,66 @@ export default function ScrollDebugHUD() {
   const [worstGap, setWorstGap] = useState(0);
   const [gapCount, setGapCount] = useState(0);
   const [heartbeats, setHeartbeats] = useState(0);
+  const [bodyStyle, setBodyStyle] = useState({ pos: '', ovf: '', top: '' });
+  const [computed, setComputed] = useState({ htmlOvf: '', bodyOvf: '', touchAction: '' });
+  const [blurCount, setBlurCount] = useState(0);
+  const [fixedCount, setFixedCount] = useState(0);
+  const [stripped, setStripped] = useState(false);
 
   // refs — event listeners must not close over stale React state
   const touchedRef = useRef(false);
   const scrolledRef = useRef(false);
-  const userTouchedRef = useRef(false);
+  const userScrolledRef = useRef(false);
+  const firstMoveRef = useRef(false);
 
   const push = (msg: string) =>
     setLog((prev) => {
       const next = [...prev, { t: now(), msg }];
-      return next.slice(-40);
+      return next.slice(-30);
     });
 
   useEffect(() => {
     push('HUD mounted');
     push(`readyState=${document.readyState}`);
 
-    // Touch — log ONLY the very first one, via ref
     const onTouch = () => {
       if (!touchedRef.current) {
         touchedRef.current = true;
         setTouchMs(now());
         push(`FIRST touchstart @${now()}ms`);
       }
-      if (!userTouchedRef.current) {
-        userTouchedRef.current = true;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      setTouchmoveCount((c) => c + 1);
+      if (!firstMoveRef.current) {
+        firstMoveRef.current = true;
+        setFirstMoveMs(now());
+        push(`FIRST touchmove @${now()}ms cancelable=${e.cancelable}`);
       }
     };
-    // Scroll — separate "any scroll" vs "user-driven scroll after first touch"
     const onScroll = () => {
       setScrollY(window.scrollY);
       if (!scrolledRef.current) {
         scrolledRef.current = true;
         setScrollMs(now());
-        push(`FIRST scroll @${now()}ms (may be programmatic)`);
+        push(`FIRST scroll @${now()}ms`);
       }
-      if (userTouchedRef.current && userScrollMs === null) {
+      if (touchedRef.current && !userScrolledRef.current) {
+        userScrolledRef.current = true;
         setUserScrollMs(now());
-        push(`FIRST user-scroll @${now()}ms`);
+        push(`FIRST scroll-after-touch @${now()}ms`);
       }
     };
     window.addEventListener('touchstart', onTouch, { passive: true, capture: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true, capture: true });
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    // readyState transitions — critical to know when the browser calls the page "done"
     const onReady = () => push(`readyState -> ${document.readyState} @${now()}ms`);
     document.addEventListener('readystatechange', onReady);
-    window.addEventListener('DOMContentLoaded', () => push(`DOMContentLoaded @${now()}ms`), { once: true });
     window.addEventListener('load', () => {
       push(`window LOAD @${now()}ms`);
       const n = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
       if (n) setNav(n);
-      // resources: how many, total bytes, slowest
       const list = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
       let bytes = 0;
       let slowest = 0;
@@ -77,14 +87,8 @@ export default function ScrollDebugHUD() {
         if (r.duration > slowest) slowest = r.duration;
       });
       setRes({ count: list.length, bytes, slowest: Math.round(slowest) });
-      // count images
-      const all = document.querySelectorAll('img');
-      let loaded = 0;
-      all.forEach((i) => { if ((i as HTMLImageElement).complete) loaded++; });
-      setImgs({ total: all.length, loaded });
     }, { once: true });
 
-    // Main-thread stall detector — rAF gap > 120ms
     let lastFrame = performance.now();
     let raf = 0;
     const tick = () => {
@@ -93,34 +97,78 @@ export default function ScrollDebugHUD() {
       if (gap > 120) {
         setGapCount((c) => c + 1);
         setWorstGap((w) => (gap > w ? Math.round(gap) : w));
-        push(`frame gap ${Math.round(gap)}ms @${Math.round(t)}`);
+        push(`frame gap ${Math.round(gap)}ms`);
       }
       lastFrame = t;
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
 
-    // Heartbeat — confirms JS is running even when no other events fire
     const hb = setInterval(() => setHeartbeats((h) => h + 1), 500);
 
-    // Track image loading progress
-    const imgInt = setInterval(() => {
-      const all = document.querySelectorAll('img');
+    // Poll body/html state — is something locking scroll?
+    const spy = setInterval(() => {
+      const b = document.body;
+      setBodyStyle({
+        pos: b.style.position || '(unset)',
+        ovf: b.style.overflow || '(unset)',
+        top: b.style.top || '(unset)',
+      });
+      const cs = getComputedStyle(b);
+      const cshtml = getComputedStyle(document.documentElement);
+      setComputed({
+        htmlOvf: `${cshtml.overflowX}/${cshtml.overflowY}`,
+        bodyOvf: `${cs.overflowX}/${cs.overflowY}`,
+        touchAction: `${cshtml.touchAction}/${cs.touchAction}`,
+      });
+      // Count elements using backdrop-filter (iOS compositor killer)
+      const all = document.querySelectorAll('*');
+      let blurs = 0;
+      let fixed = 0;
+      all.forEach((el) => {
+        const s = getComputedStyle(el);
+        const bf = s.backdropFilter || (s as any).webkitBackdropFilter;
+        if (bf && bf !== 'none') blurs++;
+        if (s.position === 'fixed') fixed++;
+      });
+      setBlurCount(blurs);
+      setFixedCount(fixed);
+      // images
+      const imgAll = document.querySelectorAll('img');
       let loaded = 0;
-      all.forEach((i) => { if ((i as HTMLImageElement).complete) loaded++; });
-      setImgs({ total: all.length, loaded });
+      imgAll.forEach((i) => { if ((i as HTMLImageElement).complete) loaded++; });
+      setImgs({ total: imgAll.length, loaded });
     }, 500);
 
     return () => {
       window.removeEventListener('touchstart', onTouch, { capture: true } as any);
+      window.removeEventListener('touchmove', onTouchMove, { capture: true } as any);
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('readystatechange', onReady);
       cancelAnimationFrame(raf);
       clearInterval(hb);
-      clearInterval(imgInt);
+      clearInterval(spy);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const stripLocks = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    const b = document.body;
+    const h = document.documentElement;
+    b.style.position = '';
+    b.style.top = '';
+    b.style.overflow = '';
+    b.style.overflowX = '';
+    b.style.overflowY = 'auto';
+    h.style.overflow = '';
+    h.style.overflowX = '';
+    h.style.overflowY = 'auto';
+    b.style.touchAction = 'auto';
+    h.style.touchAction = 'auto';
+    setStripped(true);
+    push(`STRIPPED locks @${now()}ms`);
+  };
 
   const kb = (b: number) => `${(b / 1024).toFixed(0)}KB`;
 
@@ -132,65 +180,75 @@ export default function ScrollDebugHUD() {
         left: 8,
         right: 8,
         zIndex: 999999,
-        background: 'rgba(0,0,0,0.9)',
+        background: 'rgba(0,0,0,0.92)',
         color: '#0f0',
         font: '11px/1.4 ui-monospace, Menlo, monospace',
         padding: collapsed ? '4px 8px' : '8px 10px',
         borderRadius: 8,
         border: '1px solid #0f0',
-        maxHeight: collapsed ? 24 : '60vh',
+        maxHeight: collapsed ? 24 : '65vh',
         overflow: 'auto',
         pointerEvents: 'auto',
       }}
       onClick={() => setCollapsed((c) => !c)}
     >
       <div style={{ color: '#fff', marginBottom: 4 }}>
-        [tap {collapsed ? 'to expand' : 'to collapse'}] t={now()}ms hb={heartbeats} scrollY={scrollY}
+        [tap {collapsed ? 'expand' : 'collapse'}] t={now()}ms hb={heartbeats} y={scrollY}
       </div>
       {!collapsed && (
         <>
-          <div style={{ color: '#ff0' }}>
-            first touch: {touchMs === null ? 'NEVER' : `${touchMs}ms`}
-          </div>
-          <div style={{ color: '#ff0' }}>
-            first scroll (any): {scrollMs === null ? 'NEVER' : `${scrollMs}ms`}
-          </div>
-          <div style={{ color: '#ff0' }}>
-            first USER scroll: {userScrollMs === null ? 'NEVER' : `${userScrollMs}ms`}
-          </div>
-          <div>
-            frame gaps: {gapCount} · worst {worstGap}ms (iOS: longtask API not supported)
-          </div>
+          <button
+            onClick={stripLocks}
+            onTouchStart={stripLocks}
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: '10px',
+              background: stripped ? '#440' : '#a00',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 6,
+              fontSize: 13,
+              fontWeight: 700,
+              marginBottom: 8,
+            }}
+          >
+            {stripped ? '✓ STRIPPED — try scroll now' : 'TAP: STRIP body/html locks'}
+          </button>
+          <div style={{ color: '#ff0' }}>first touch: {touchMs === null ? 'NEVER' : `${touchMs}ms`}</div>
+          <div style={{ color: '#ff0' }}>first touchmove: {firstMoveMs === null ? 'NEVER' : `${firstMoveMs}ms`}</div>
+          <div style={{ color: '#ff0' }}>touchmoves total: {touchmoveCount}</div>
+          <div style={{ color: '#ff0' }}>first scroll: {scrollMs === null ? 'NEVER' : `${scrollMs}ms`}</div>
+          <div style={{ color: '#ff0' }}>scroll after touch: {userScrollMs === null ? 'NEVER' : `${userScrollMs}ms`}</div>
+          <div>frame gaps: {gapCount} · worst {worstGap}ms</div>
+          <hr style={{ borderColor: '#333', margin: '6px 0' }} />
+          <div style={{ color: '#0ff' }}>BODY STYLE (inline):</div>
+          <div>pos={bodyStyle.pos} · ovf={bodyStyle.ovf} · top={bodyStyle.top}</div>
+          <div style={{ color: '#0ff' }}>COMPUTED:</div>
+          <div>html ovf: {computed.htmlOvf}</div>
+          <div>body ovf: {computed.bodyOvf}</div>
+          <div>touch-action: {computed.touchAction}</div>
+          <hr style={{ borderColor: '#333', margin: '6px 0' }} />
+          <div style={{ color: '#0ff' }}>DOM COMPOSITOR LOAD:</div>
+          <div>backdrop-filter els: {blurCount}</div>
+          <div>position:fixed els: {fixedCount}</div>
           {nav && (
             <>
               <hr style={{ borderColor: '#333', margin: '6px 0' }} />
-              <div style={{ color: '#0ff' }}>NAVIGATION TIMING:</div>
               <div>domInteractive: {Math.round(nav.domInteractive)}ms</div>
-              <div>domContentLoadedEventEnd: {Math.round(nav.domContentLoadedEventEnd)}ms</div>
               <div>domComplete: {Math.round(nav.domComplete)}ms</div>
               <div>loadEventEnd: {Math.round(nav.loadEventEnd)}ms</div>
-              <div>transferSize: {kb(nav.transferSize || 0)} encoded: {kb(nav.encodedBodySize || 0)}</div>
+              <div>transferSize: {kb(nav.transferSize || 0)}</div>
             </>
           )}
           {res.count > 0 && (
-            <>
-              <hr style={{ borderColor: '#333', margin: '6px 0' }} />
-              <div style={{ color: '#0ff' }}>RESOURCES:</div>
-              <div>
-                {res.count} loaded · total {kb(res.bytes)} · slowest {res.slowest}ms
-              </div>
-            </>
+            <div>resources: {res.count} · {kb(res.bytes)} · slowest {res.slowest}ms</div>
           )}
-          <hr style={{ borderColor: '#333', margin: '6px 0' }} />
-          <div style={{ color: '#0ff' }}>
-            IMAGES: {imgs.loaded}/{imgs.total} complete
-          </div>
+          <div>IMAGES: {imgs.loaded}/{imgs.total}</div>
           <hr style={{ borderColor: '#333', margin: '6px 0' }} />
           <div style={{ color: '#0ff' }}>LOG:</div>
           {log.map((e, i) => (
-            <div key={i}>
-              [{e.t}ms] {e.msg}
-            </div>
+            <div key={i}>[{e.t}ms] {e.msg}</div>
           ))}
         </>
       )}
