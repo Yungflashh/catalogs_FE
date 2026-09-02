@@ -36,15 +36,15 @@ export default function Logo({ size, className }: Props) {
       />
 
       <path
-        d="M26.5 14.8 A6.2 6.2 0 1 0 26.5 25.2"
+        d="M23.38 14.8 A6.2 6.2 0 1 0 23.38 25.2"
         stroke="#061410"
         strokeWidth="3.8"
         strokeLinecap="round"
         fill="none"
       />
 
-      <circle cx="26.8" cy="20" r="1.55" fill="#061410" />
-      <circle cx="26.8" cy="20" r="0.55" fill="#4ADE80" />
+      <circle cx="24.6" cy="20" r="1.55" fill="#061410" />
+      <circle cx="24.6" cy="20" r="0.55" fill="#4ADE80" />
     </svg>
   );
 }
