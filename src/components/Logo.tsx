@@ -17,39 +17,34 @@ export default function Logo({ size, className }: Props) {
       focusable="false"
     >
       <defs>
-        <linearGradient id="cat-tile" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#0F2E1F" />
-          <stop offset="100%" stopColor="#061410" />
-        </linearGradient>
-        <linearGradient id="cat-bar" x1="0" y1="0" x2="1" y2="0">
+        <linearGradient id="cat-hex" x1="0.15" y1="0" x2="0.85" y2="1">
           <stop offset="0%" stopColor="#4ADE80" />
-          <stop offset="100%" stopColor="#16A34A" />
+          <stop offset="55%" stopColor="#22C55E" />
+          <stop offset="100%" stopColor="#15803D" />
         </linearGradient>
-        <radialGradient id="cat-shine" cx="0.25" cy="0.2" r="0.85">
-          <stop offset="0%" stopColor="#22C55E" stopOpacity="0.32" />
-          <stop offset="100%" stopColor="#22C55E" stopOpacity="0" />
-        </radialGradient>
+        <linearGradient id="cat-hex-edge" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#86EFAC" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#166534" stopOpacity="0.4" />
+        </linearGradient>
       </defs>
 
-      <rect width="40" height="40" rx="10" fill="url(#cat-tile)" />
-      <rect width="40" height="40" rx="10" fill="url(#cat-shine)" />
-      <rect
-        x="0.6"
-        y="0.6"
-        width="38.8"
-        height="38.8"
-        rx="9.4"
-        fill="none"
-        stroke="#22C55E"
-        strokeOpacity="0.3"
-        strokeWidth="1"
+      <path
+        d="M20 2.5 L35.6 11.25 L35.6 28.75 L20 37.5 L4.4 28.75 L4.4 11.25 Z"
+        fill="url(#cat-hex)"
+        stroke="url(#cat-hex-edge)"
+        strokeWidth="0.8"
       />
 
-      <rect x="10" y="10.5" width="20" height="3.6" rx="1.8" fill="url(#cat-bar)" />
-      <rect x="10" y="18.2" width="11" height="3.6" rx="1.8" fill="#22C55E" />
-      <rect x="10" y="25.9" width="20" height="3.6" rx="1.8" fill="url(#cat-bar)" />
+      <path
+        d="M26.5 14.8 A6.2 6.2 0 1 0 26.5 25.2"
+        stroke="#061410"
+        strokeWidth="3.8"
+        strokeLinecap="round"
+        fill="none"
+      />
 
-      <circle cx="24.5" cy="20" r="1.35" fill="#86EFAC" />
+      <circle cx="26.8" cy="20" r="1.55" fill="#061410" />
+      <circle cx="26.8" cy="20" r="0.55" fill="#4ADE80" />
     </svg>
   );
 }
