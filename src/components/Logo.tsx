@@ -17,53 +17,39 @@ export default function Logo({ size, className }: Props) {
       focusable="false"
     >
       <defs>
-        <linearGradient id="cat-lg-bg" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="cat-tile" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#0F2E1F" />
           <stop offset="100%" stopColor="#061410" />
         </linearGradient>
-        <linearGradient id="cat-lg-c" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="cat-bar" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="#4ADE80" />
-          <stop offset="100%" stopColor="#15803D" />
+          <stop offset="100%" stopColor="#16A34A" />
         </linearGradient>
-        <radialGradient id="cat-lg-glow" cx="0.3" cy="0.25" r="0.7">
-          <stop offset="0%" stopColor="#22C55E" stopOpacity="0.35" />
+        <radialGradient id="cat-shine" cx="0.25" cy="0.2" r="0.85">
+          <stop offset="0%" stopColor="#22C55E" stopOpacity="0.32" />
           <stop offset="100%" stopColor="#22C55E" stopOpacity="0" />
         </radialGradient>
       </defs>
 
-      <rect width="40" height="40" rx="11" fill="url(#cat-lg-bg)" />
-      <rect width="40" height="40" rx="11" fill="url(#cat-lg-glow)" />
+      <rect width="40" height="40" rx="10" fill="url(#cat-tile)" />
+      <rect width="40" height="40" rx="10" fill="url(#cat-shine)" />
       <rect
         x="0.6"
         y="0.6"
         width="38.8"
         height="38.8"
-        rx="10.4"
+        rx="9.4"
         fill="none"
         stroke="#22C55E"
-        strokeOpacity="0.28"
+        strokeOpacity="0.3"
         strokeWidth="1"
       />
 
-      <path
-        d="M28.5 11.5 A9.5 9.5 0 1 0 28.5 28.5"
-        stroke="#22C55E"
-        strokeOpacity="0.32"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        fill="none"
-      />
+      <rect x="10" y="10.5" width="20" height="3.6" rx="1.8" fill="url(#cat-bar)" />
+      <rect x="10" y="18.2" width="11" height="3.6" rx="1.8" fill="#22C55E" />
+      <rect x="10" y="25.9" width="20" height="3.6" rx="1.8" fill="url(#cat-bar)" />
 
-      <path
-        d="M26.2 14.5 A5.8 5.8 0 1 0 26.2 25.5"
-        stroke="url(#cat-lg-c)"
-        strokeWidth="3.4"
-        strokeLinecap="round"
-        fill="none"
-      />
-
-      <circle cx="27.4" cy="20" r="1.55" fill="#86EFAC" />
-      <circle cx="27.4" cy="20" r="0.6" fill="#F0FDF4" />
+      <circle cx="24.5" cy="20" r="1.35" fill="#86EFAC" />
     </svg>
   );
 }
