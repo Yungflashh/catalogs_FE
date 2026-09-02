@@ -26,14 +26,11 @@
 .brand-mark {
   width: 30px;
   height: 30px;
-  border-radius: 9px;
-  background: var(--green);
   display: grid;
   place-items: center;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #07100D;
+  flex-shrink: 0;
 }
+.brand-mark svg { width: 100%; height: 100%; display: block; }
 .nav-search {
   flex: 1;
   max-width: 440px;

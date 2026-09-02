@@ -5,6 +5,7 @@ import {
   GridIcon, BoxIcon, PackageCheck, UsersIcon, CoinIcon, WalletIcon,
   MenuIcon, CloseIcon,
 } from '../../components/Icons';
+import Logo from '../../components/Logo';
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
 import './Admin.css';
 
@@ -21,7 +22,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <>
       <div className="admin-brand">
-        <span className="brand-mark">C</span>
+        <span className="admin-brand-mark"><Logo /></span>
         <div>
           <div className="admin-brand-name">CATALOG</div>
           <div className="admin-brand-sub">Admin console</div>

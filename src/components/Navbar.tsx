@@ -9,6 +9,7 @@ import {
   BoxIcon, LogoutIcon, GridIcon,
 } from './Icons';
 import { Sun, Moon } from 'lucide-react';
+import Logo from './Logo';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -58,7 +59,7 @@ export default function Navbar() {
     <header className="nav">
       <div className="container nav-inner">
         <Link to="/" className="brand">
-          <span className="brand-mark">C</span>CATALOG
+          <span className="brand-mark"><Logo /></span>CATALOG
         </Link>
 
         <form className="nav-search" onSubmit={submit}>
