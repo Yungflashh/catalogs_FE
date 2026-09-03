@@ -314,23 +314,11 @@ export default function Landing() {
   })();
   const show = (n: number) => level >= n;
 
-  // Marquees (2 infinite CSS animations + 64 image cards) freeze iOS Safari's
-  // first-touch handler for ~1-2s at mount. Interaction-based deferral: wait
-  // for the user's first touch/scroll/click before rendering. Once user has
-  // interacted, touch handlers are proven bound and heavy mount is safe.
-  // 3s fallback covers users who just stare at the page.
-  const [marqueeReady, setMarqueeReady] = useState(false);
-  useEffect(() => {
-    if (marqueeReady) return;
-    const events = ['touchstart', 'pointerdown', 'wheel', 'scroll', 'keydown'];
-    const trigger = () => setMarqueeReady(true);
-    events.forEach((e) => window.addEventListener(e, trigger, { passive: true, once: true }));
-    const fallback = window.setTimeout(trigger, 3000);
-    return () => {
-      events.forEach((e) => window.removeEventListener(e, trigger));
-      clearTimeout(fallback);
-    };
-  }, [marqueeReady]);
+  // Marquee cards render immediately. Interaction-based deferral (previously
+  // here) may have been interfering with iOS scroll gesture recognition by
+  // triggering a large React re-render during first touch. content-visibility
+  // on the section handles paint-side deferral.
+  const marqueeReady = true;
 
   return (
     <div className="lp">
