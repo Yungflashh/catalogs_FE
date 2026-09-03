@@ -5,6 +5,7 @@ import { Footer, ProtectedRoute, AdminRoute } from './components/Shared';
 import SplashScreen from './components/SplashScreen';
 import ScrollDebugHUD from './components/ScrollDebugHUD';
 import ChatWidget from './components/ChatWidget';
+import ProbeHUD from './components/ProbeHUD';
 import { trackApi } from './api/services';
 
 function ScrollToTop() {
@@ -103,6 +104,7 @@ export default function App() {
       <VisitorPing />
       <ScrollToTop />
       {typeof window !== 'undefined' && window.location.search.includes('debug=1') && <ScrollDebugHUD />}
+      {typeof window !== 'undefined' && window.location.search.includes('probe=1') && <ProbeHUD />}
       <Navbar />
       <main style={{ minHeight: 'calc(100vh - 68px)' }}>
         <Routes>

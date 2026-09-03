@@ -281,55 +281,6 @@ function AvatarImg({ src, initials, size = 42 }: { src: string; initials: string
   );
 }
 
-// Diagnostic HUD — visible with ?probe=1. Reports the exact ms at which key
-// milestones fire so we can see WHERE the Chrome-mobile mount pause happens.
-function ProbeHUD() {
-  const [state, setState] = useState({
-    mountMs: Math.round(performance.now()),
-    firstFrameMs: 0,
-    firstTouchMs: 0,
-    firstScrollMs: 0,
-    apiReplyMs: 0,
-    imgLoadedCount: 0,
-    imgTotalCount: 0,
-  });
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      setState((s) => ({ ...s, firstFrameMs: Math.round(performance.now()) }));
-    });
-    const onTouch = () => setState((s) => s.firstTouchMs ? s : { ...s, firstTouchMs: Math.round(performance.now()) });
-    const onScroll = () => setState((s) => s.firstScrollMs ? s : { ...s, firstScrollMs: Math.round(performance.now()) });
-    window.addEventListener('touchstart', onTouch, { passive: true, once: true });
-    window.addEventListener('scroll', onScroll, { passive: true, once: true });
-    const imgInt = window.setInterval(() => {
-      const imgs = Array.from(document.images);
-      const loaded = imgs.filter((i) => i.complete).length;
-      setState((s) => ({ ...s, imgTotalCount: imgs.length, imgLoadedCount: loaded }));
-    }, 250);
-    return () => {
-      window.removeEventListener('touchstart', onTouch);
-      window.removeEventListener('scroll', onScroll);
-      clearInterval(imgInt);
-    };
-  }, []);
-  return (
-    <div style={{
-      position: 'fixed', top: 68, right: 6, zIndex: 99999,
-      background: 'rgba(0,0,0,0.85)', color: '#4ADE80',
-      padding: '6px 8px', borderRadius: 6, fontFamily: 'monospace',
-      fontSize: 11, lineHeight: 1.4, pointerEvents: 'none',
-      border: '1px solid #22C55E',
-    }}>
-      <div>PROBE v8</div>
-      <div>mount: {state.mountMs}ms</div>
-      <div>firstFrame: {state.firstFrameMs}ms</div>
-      <div>firstTouch: {state.firstTouchMs || '—'}ms</div>
-      <div>firstScroll: {state.firstScrollMs || '—'}ms</div>
-      <div>imgs: {state.imgLoadedCount}/{state.imgTotalCount}</div>
-    </div>
-  );
-}
-
 export default function Landing() {
   const [featured, setFeatured]     = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -383,11 +334,6 @@ export default function Landing() {
 
   return (
     <div className="lp">
-
-      {/* Diagnostic timing HUD — visible when ?probe=1 */}
-      {typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('probe') === '1' && (
-        <ProbeHUD />
-      )}
 
       {/* ══════════════════════════════
           1. HERO
