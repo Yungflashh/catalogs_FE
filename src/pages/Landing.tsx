@@ -524,20 +524,22 @@ export default function Landing() {
           </div>
         </div>
 
-        <div className="container" style={{ marginTop: 48 }}>
-          <div className="banks-info-row">
-            {[
-              { img: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=400&h=120&fit=crop', title: 'North America', desc: 'Chase, BOA, Wells Fargo, Citi, Capital One, PNC, US Bank, TD, Ally & more' },
-              { img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=120&fit=crop', title: 'Europe & UK',   desc: 'Barclays, HSBC, Deutsche Bank, Santander, BNP Paribas, ING, Revolut & more' },
-              { img: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=120&fit=crop', title: 'Asia-Pacific',  desc: 'DBS, ANZ, NAB, Commonwealth Bank, ICBC, MUFG, Macquarie & more' },
-            ].map((c, i) => (
-              <div key={i} className="banks-info-card glass">
-                <img src={c.img} alt={c.title} className="banks-info-img" loading="lazy" decoding="async" />
-                <div className="banks-info-body"><strong>{c.title}</strong><span>{c.desc}</span></div>
-              </div>
-            ))}
+        {marqueeReady && (
+          <div className="container" style={{ marginTop: 48 }}>
+            <div className="banks-info-row">
+              {[
+                { img: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=400&h=120&fit=crop', title: 'North America', desc: 'Chase, BOA, Wells Fargo, Citi, Capital One, PNC, US Bank, TD, Ally & more' },
+                { img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=120&fit=crop', title: 'Europe & UK',   desc: 'Barclays, HSBC, Deutsche Bank, Santander, BNP Paribas, ING, Revolut & more' },
+                { img: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=120&fit=crop', title: 'Asia-Pacific',  desc: 'DBS, ANZ, NAB, Commonwealth Bank, ICBC, MUFG, Macquarie & more' },
+              ].map((c, i) => (
+                <div key={i} className="banks-info-card glass">
+                  <img src={c.img} alt={c.title} className="banks-info-img" loading="lazy" decoding="async" />
+                  <div className="banks-info-body"><strong>{c.title}</strong><span>{c.desc}</span></div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </section>)}
 
       {/* ══════════════════════════════
