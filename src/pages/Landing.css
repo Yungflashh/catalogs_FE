@@ -20,6 +20,17 @@
    to promote 2 marquee layers (64 image-bearing cards) at mount, causing ~1-2s
    first-touch delay. Active transform animation auto-promotes on first frame. */
 
+/* Skip layout/paint for below-fold sections until they scroll near viewport.
+   Root cause of iOS Chrome (WebKit) first-touch hang: compositor thread paints
+   all 11 sections + 40+ images at mount. content-visibility: auto tells WebKit
+   to defer that work until each section is about to be visible.
+   contain-intrinsic-size reserves scrollbar-accurate height so we don't get
+   jump-back-to-top when sections realize their real size. */
+.lp section:not(.lp-hero) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
+}
+
 /* ── Shared ── */
 .green-text { color: var(--green); }
 .green-icon { color: var(--green); flex-shrink: 0; }
