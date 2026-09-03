@@ -1,7 +1,6 @@
-/* .lp { overflow-x: hidden; } — REMOVED as diagnostic. iOS WebKit has a
-   documented bug where overflow-x on a scroll container delays scroll
-   gesture commit as it decides whether to scroll container or window.
-   Global overflow-x is set on html/body in styles/index.css anyway. */
+/* No overflow-x on .lp — iOS WebKit delays touch->scroll commit when a
+   large scroll container declares overflow-x. Global html/body already
+   hide horizontal overflow in styles/index.css. */
 
 /* PERF: .glass ships backdrop-filter: blur(20px) saturate(140%). With 90+
    .glass elements on this page (64 inside two animated marquees) the
@@ -19,16 +18,9 @@
   -webkit-backdrop-filter: none;
   background: var(--bg-1);
 }
-/* GPU hints removed: pre-emptive will-change/translateZ was forcing iOS Safari
-   to promote 2 marquee layers (64 image-bearing cards) at mount, causing ~1-2s
-   first-touch delay. Active transform animation auto-promotes on first frame. */
-
 /* Skip layout/paint for below-fold sections until they scroll near viewport.
-   Root cause of iOS Chrome (WebKit) first-touch hang: compositor thread paints
-   all 11 sections + 40+ images at mount. content-visibility: auto tells WebKit
-   to defer that work until each section is about to be visible.
-   contain-intrinsic-size reserves scrollbar-accurate height so we don't get
-   jump-back-to-top when sections realize their real size. */
+   contain-intrinsic-size reserves accurate height so scrollbar doesn't jump
+   as sections realize their real dimensions. */
 .lp section:not(.lp-hero) {
   content-visibility: auto;
   contain-intrinsic-size: auto 700px;
@@ -642,11 +634,8 @@
 /* ─────────────────────────────────────
    REVEAL
 ───────────────────────────────────── */
-/* Reveal transitions disabled — compositor transitions during scroll
-   were adding ~1s delay between touch and scroll commit on iOS WebKit.
-   Sections now appear instantly when they scroll into view. */
-[data-reveal] { opacity: 1; transform: none; }
-[data-reveal].is-visible { opacity: 1; transform: none; }
+[data-reveal] { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
+[data-reveal].is-visible { opacity: 1; transform: translateY(0); }
 
 /* ─────────────────────────────────────
    RESPONSIVE

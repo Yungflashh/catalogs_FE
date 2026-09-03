@@ -304,29 +304,13 @@ export default function Landing() {
     return () => obs.disconnect();
   }, [loading]);
 
-  // Diagnostic: ?level=N renders only sections 1..N (out of 11).
-  // Bisect the landing hang without redeploys.
-  const level = (() => {
-    if (typeof window === 'undefined') return 99;
-    const raw = new URLSearchParams(window.location.search).get('level');
-    const n = raw ? parseInt(raw, 10) : NaN;
-    return isNaN(n) ? 99 : n;
-  })();
-  const show = (n: number) => level >= n;
-
-  // Marquee cards render immediately. Interaction-based deferral (previously
-  // here) may have been interfering with iOS scroll gesture recognition by
-  // triggering a large React re-render during first touch. content-visibility
-  // on the section handles paint-side deferral.
-  const marqueeReady = true;
-
   return (
     <div className="lp">
 
       {/* ══════════════════════════════
           1. HERO
       ══════════════════════════════ */}
-      {show(1) && (<section className="lp-hero">
+      <section className="lp-hero">
         <div className="hero-bg-grid" />
         <div className="hero-glow-1" />
         <div className="hero-glow-2" />
@@ -374,14 +358,23 @@ export default function Landing() {
                 <span>Trusted by <strong>2,000+</strong> shoppers</span>
               </div>
 
-              {/* DIAG: hero-banks-mini (6 favicons) temporarily removed to test
-                  iOS Chrome image-decode-blocks-scroll hypothesis. */}
+              <div className="hero-banks-mini">
+                <span className="hero-banks-label">Banks in stock:</span>
+                <div className="hero-banks-row">
+                  {BANKS.slice(0, 6).map((b) => (
+                    <div key={b.name} className="hero-bank-img-wrap" title={b.name}>
+                      <BankLogo bank={b} />
+                    </div>
+                  ))}
+                  <span className="hero-bank-more">+100</span>
+                </div>
+              </div>
             </div>
 
             {/* RIGHT */}
             <div className="hero-card-wrap fade-up" style={{ animationDelay: '0.12s' }}>
               <div className="hero-photo-card">
-                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=560&h=220&fit=crop" alt="Bank logs" className="hero-photo-img" fetchPriority="low" decoding="async" loading="lazy" />
+                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=560&h=220&fit=crop" alt="Bank logs" className="hero-photo-img" fetchPriority="high" decoding="async" />
                 <div className="hero-photo-overlay">
                   <div className="hero-photo-badge glass">
                     <BadgeCheck size={14} className="green-icon" />
@@ -399,7 +392,14 @@ export default function Landing() {
                   <span className="dash-badge"><TrendingUp size={12} /> Ready to spend</span>
                 </div>
 
-                {/* DIAG: dash-entries (4 favicons via DashRow) temporarily removed */}
+                <div className="dash-entries">
+                  {[
+                    { name: 'Chase Business — $48,200',  abbr: 'JPM',  color: '#117ACA', logo: 'https://www.google.com/s2/favicons?sz=64&domain=chase.com' },
+                    { name: 'Bank of America — $22,400', abbr: 'BOA',  color: '#C0272D', logo: 'https://www.google.com/s2/favicons?sz=64&domain=bankofamerica.com' },
+                    { name: 'Barclays — $15,000',        abbr: 'BARC', color: '#00AEEF', logo: 'https://www.google.com/s2/favicons?sz=64&domain=barclays.com' },
+                    { name: 'Wells Fargo — $9,850',      abbr: 'WF',   color: '#CF4520', logo: 'https://www.google.com/s2/favicons?sz=64&domain=wellsfargo.com' },
+                  ].map((e, i) => <DashRow key={i} entry={e} />)}
+                </div>
 
                 <div className="dash-bar-wrap">
                   <div className="dash-bar-label">
@@ -429,12 +429,12 @@ export default function Landing() {
 
           </div>
         </div>
-      </section>)}
+      </section>
 
       {/* ══════════════════════════════
           2. STATS
       ══════════════════════════════ */}
-      {show(2) && (<section className="lp-stats" data-reveal>
+      <section className="lp-stats" data-reveal>
         <div className="container">
           <div className="stats-grid glass">
             {STATS.map((s) => (
@@ -446,12 +446,12 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>)}
+      </section>
 
       {/* ══════════════════════════════
           3. BANKS MARQUEE
       ══════════════════════════════ */}
-      {show(3) && (<section className="lp-banks" data-reveal>
+      <section className="lp-banks" data-reveal>
         <div className="container">
           <div className="section-head center" style={{ marginBottom: 40 }}>
             <p className="eyebrow">What is CATALOG</p>
@@ -467,57 +467,51 @@ export default function Landing() {
         <div className="banks-marquee-wrap">
           <div className="banks-fade-left" /><div className="banks-fade-right" />
           <div className="banks-marquee">
-            {marqueeReady && (
-              <div className="banks-track">
-                {[...BANKS, ...BANKS].map((b, i) => (
-                  <div key={i} className="bank-logo-card glass">
-                    <div className="bank-logo-icon-wrap"><BankLogo bank={b} /></div>
-                    <span className="bank-logo-name">{b.name}</span>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="banks-track">
+              {[...BANKS, ...BANKS].map((b, i) => (
+                <div key={i} className="bank-logo-card glass">
+                  <div className="bank-logo-icon-wrap"><BankLogo bank={b} /></div>
+                  <span className="bank-logo-name">{b.name}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
         <div className="banks-marquee-wrap" style={{ marginTop: 14 }}>
           <div className="banks-fade-left" /><div className="banks-fade-right" />
           <div className="banks-marquee">
-            {marqueeReady && (
-              <div className="banks-track banks-track-reverse">
-                {[...BANKS.slice(8), ...BANKS.slice(0,8), ...BANKS.slice(8), ...BANKS.slice(0,8)].map((b, i) => (
-                  <div key={i} className="bank-logo-card glass">
-                    <div className="bank-logo-icon-wrap"><BankLogo bank={b} /></div>
-                    <span className="bank-logo-name">{b.name}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {marqueeReady && (
-          <div className="container" style={{ marginTop: 48 }}>
-            <div className="banks-info-row">
-              {[
-                { img: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=400&h=120&fit=crop', title: 'North America', desc: 'Chase, BOA, Wells Fargo, Citi, Capital One, PNC, US Bank, TD, Ally & more' },
-                { img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=120&fit=crop', title: 'Europe & UK',   desc: 'Barclays, HSBC, Deutsche Bank, Santander, BNP Paribas, ING, Revolut & more' },
-                { img: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=120&fit=crop', title: 'Asia-Pacific',  desc: 'DBS, ANZ, NAB, Commonwealth Bank, ICBC, MUFG, Macquarie & more' },
-              ].map((c, i) => (
-                <div key={i} className="banks-info-card glass">
-                  <img src={c.img} alt={c.title} className="banks-info-img" loading="lazy" decoding="async" />
-                  <div className="banks-info-body"><strong>{c.title}</strong><span>{c.desc}</span></div>
+            <div className="banks-track banks-track-reverse">
+              {[...BANKS.slice(8), ...BANKS.slice(0,8), ...BANKS.slice(8), ...BANKS.slice(0,8)].map((b, i) => (
+                <div key={i} className="bank-logo-card glass">
+                  <div className="bank-logo-icon-wrap"><BankLogo bank={b} /></div>
+                  <span className="bank-logo-name">{b.name}</span>
                 </div>
               ))}
             </div>
           </div>
-        )}
-      </section>)}
+        </div>
+
+        <div className="container" style={{ marginTop: 48 }}>
+          <div className="banks-info-row">
+            {[
+              { img: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=400&h=120&fit=crop', title: 'North America', desc: 'Chase, BOA, Wells Fargo, Citi, Capital One, PNC, US Bank, TD, Ally & more' },
+              { img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=120&fit=crop', title: 'Europe & UK',   desc: 'Barclays, HSBC, Deutsche Bank, Santander, BNP Paribas, ING, Revolut & more' },
+              { img: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=120&fit=crop', title: 'Asia-Pacific',  desc: 'DBS, ANZ, NAB, Commonwealth Bank, ICBC, MUFG, Macquarie & more' },
+            ].map((c, i) => (
+              <div key={i} className="banks-info-card glass">
+                <img src={c.img} alt={c.title} className="banks-info-img" loading="lazy" decoding="async" />
+                <div className="banks-info-body"><strong>{c.title}</strong><span>{c.desc}</span></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ══════════════════════════════
           4. LOG TYPES
       ══════════════════════════════ */}
-      {show(4) && (<section className="lp-section lp-logtypes" data-reveal>
+      <section className="lp-section lp-logtypes" data-reveal>
         <div className="container">
           <div className="section-head center">
             <p className="eyebrow">What we stock</p>
@@ -547,12 +541,12 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>)}
+      </section>
 
       {/* ══════════════════════════════
           5. HOW IT WORKS
       ══════════════════════════════ */}
-      {show(5) && (<section className="lp-section lp-how" data-reveal>
+      <section className="lp-section lp-how" data-reveal>
         <div className="container">
           <div className="section-head center">
             <p className="eyebrow">How it works</p>
@@ -577,12 +571,12 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>)}
+      </section>
 
       {/* ══════════════════════════════
           6. FEATURES
       ══════════════════════════════ */}
-      {show(6) && (<section className="lp-section lp-features" data-reveal>
+      <section className="lp-section lp-features" data-reveal>
         <div className="container">
           <div className="section-head center">
             <p className="eyebrow">Why CATALOG</p>
@@ -602,12 +596,12 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>)}
+      </section>
 
       {/* ══════════════════════════════
           7. WHY / SECURITY
       ══════════════════════════════ */}
-      {show(7) && (<section className="lp-section lp-why" data-reveal>
+      <section className="lp-section lp-why" data-reveal>
         <div className="container">
           <div className="why-inner">
             <div className="why-copy">
@@ -670,12 +664,12 @@ export default function Landing() {
             </div>
           </div>
         </div>
-      </section>)}
+      </section>
 
       {/* ══════════════════════════════
           8. TESTIMONIALS
       ══════════════════════════════ */}
-      {show(8) && (<section className="lp-section lp-testi" data-reveal>
+      <section className="lp-section lp-testi" data-reveal>
         <div className="container">
           <div className="section-head center">
             <p className="eyebrow">Customer Reviews</p>
@@ -701,12 +695,12 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>)}
+      </section>
 
       {/* ══════════════════════════════
           9. BROWSE
       ══════════════════════════════ */}
-      {show(9) && (categories.length > 0 || featured.length > 0) && (
+      {(categories.length > 0 || featured.length > 0) && (
         <section className="lp-section lp-browse" data-reveal>
           <div className="container">
             <div className="section-head">
@@ -735,7 +729,7 @@ export default function Landing() {
       {/* ══════════════════════════════
           10. FAQ
       ══════════════════════════════ */}
-      {show(10) && (<section className="lp-section lp-faq" data-reveal>
+      <section className="lp-section lp-faq" data-reveal>
         <div className="container">
           <div className="faq-wrap">
             <div className="faq-head">
@@ -765,12 +759,12 @@ export default function Landing() {
             </div>
           </div>
         </div>
-      </section>)}
+      </section>
 
       {/* ══════════════════════════════
           11. CTA
       ══════════════════════════════ */}
-      {show(11) && (<section className="lp-cta" data-reveal>
+      <section className="lp-cta" data-reveal>
         <div className="container">
           <div className="cta-inner glass">
             <div className="cta-bg-img">
@@ -796,7 +790,7 @@ export default function Landing() {
             </div>
           </div>
         </div>
-      </section>)}
+      </section>
 
     </div>
   );
