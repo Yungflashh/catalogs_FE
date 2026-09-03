@@ -1,4 +1,7 @@
-.lp { overflow-x: hidden; }
+/* .lp { overflow-x: hidden; } — REMOVED as diagnostic. iOS WebKit has a
+   documented bug where overflow-x on a scroll container delays scroll
+   gesture commit as it decides whether to scroll container or window.
+   Global overflow-x is set on html/body in styles/index.css anyway. */
 
 /* PERF: .glass ships backdrop-filter: blur(20px) saturate(140%). With 90+
    .glass elements on this page (64 inside two animated marquees) the
