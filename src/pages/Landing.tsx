@@ -304,6 +304,16 @@ export default function Landing() {
     return () => obs.disconnect();
   }, [loading]);
 
+  // Diagnostic: ?level=N renders only sections 1..N (out of 11).
+  // Bisect the landing hang without redeploys.
+  const level = (() => {
+    if (typeof window === 'undefined') return 99;
+    const raw = new URLSearchParams(window.location.search).get('level');
+    const n = raw ? parseInt(raw, 10) : NaN;
+    return isNaN(n) ? 99 : n;
+  })();
+  const show = (n: number) => level >= n;
+
   return (
     <div className="lp">
 
@@ -434,7 +444,7 @@ export default function Landing() {
       {/* ══════════════════════════════
           2. STATS
       ══════════════════════════════ */}
-      <section className="lp-stats" data-reveal>
+      {show(2) && (<section className="lp-stats" data-reveal>
         <div className="container">
           <div className="stats-grid glass">
             {STATS.map((s) => (
@@ -446,12 +456,12 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* ══════════════════════════════
           3. BANKS MARQUEE
       ══════════════════════════════ */}
-      <section className="lp-banks" data-reveal>
+      {show(3) && (<section className="lp-banks" data-reveal>
         <div className="container">
           <div className="section-head center" style={{ marginBottom: 40 }}>
             <p className="eyebrow">What is CATALOG</p>
@@ -506,12 +516,12 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* ══════════════════════════════
           4. LOG TYPES
       ══════════════════════════════ */}
-      <section className="lp-section lp-logtypes" data-reveal>
+      {show(4) && (<section className="lp-section lp-logtypes" data-reveal>
         <div className="container">
           <div className="section-head center">
             <p className="eyebrow">What we stock</p>
@@ -541,12 +551,12 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* ══════════════════════════════
           5. HOW IT WORKS
       ══════════════════════════════ */}
-      <section className="lp-section lp-how" data-reveal>
+      {show(5) && (<section className="lp-section lp-how" data-reveal>
         <div className="container">
           <div className="section-head center">
             <p className="eyebrow">How it works</p>
@@ -571,12 +581,12 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* ══════════════════════════════
           6. FEATURES
       ══════════════════════════════ */}
-      <section className="lp-section lp-features" data-reveal>
+      {show(6) && (<section className="lp-section lp-features" data-reveal>
         <div className="container">
           <div className="section-head center">
             <p className="eyebrow">Why CATALOG</p>
@@ -596,12 +606,12 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* ══════════════════════════════
           7. WHY / SECURITY
       ══════════════════════════════ */}
-      <section className="lp-section lp-why" data-reveal>
+      {show(7) && (<section className="lp-section lp-why" data-reveal>
         <div className="container">
           <div className="why-inner">
             <div className="why-copy">
@@ -664,12 +674,12 @@ export default function Landing() {
             </div>
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* ══════════════════════════════
           8. TESTIMONIALS
       ══════════════════════════════ */}
-      <section className="lp-section lp-testi" data-reveal>
+      {show(8) && (<section className="lp-section lp-testi" data-reveal>
         <div className="container">
           <div className="section-head center">
             <p className="eyebrow">Customer Reviews</p>
@@ -695,12 +705,12 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* ══════════════════════════════
           9. BROWSE
       ══════════════════════════════ */}
-      {(categories.length > 0 || featured.length > 0) && (
+      {show(9) && (categories.length > 0 || featured.length > 0) && (
         <section className="lp-section lp-browse" data-reveal>
           <div className="container">
             <div className="section-head">
@@ -729,7 +739,7 @@ export default function Landing() {
       {/* ══════════════════════════════
           10. FAQ
       ══════════════════════════════ */}
-      <section className="lp-section lp-faq" data-reveal>
+      {show(10) && (<section className="lp-section lp-faq" data-reveal>
         <div className="container">
           <div className="faq-wrap">
             <div className="faq-head">
@@ -759,12 +769,12 @@ export default function Landing() {
             </div>
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* ══════════════════════════════
           11. CTA
       ══════════════════════════════ */}
-      <section className="lp-cta" data-reveal>
+      {show(11) && (<section className="lp-cta" data-reveal>
         <div className="container">
           <div className="cta-inner glass">
             <div className="cta-bg-img">
@@ -790,7 +800,7 @@ export default function Landing() {
             </div>
           </div>
         </div>
-      </section>
+      </section>)}
 
     </div>
   );
