@@ -386,23 +386,14 @@ export default function Landing() {
                 <span>Trusted by <strong>2,000+</strong> shoppers</span>
               </div>
 
-              <div className="hero-banks-mini">
-                <span className="hero-banks-label">Banks in stock:</span>
-                <div className="hero-banks-row">
-                  {BANKS.slice(0, 6).map((b) => (
-                    <div key={b.name} className="hero-bank-img-wrap" title={b.name}>
-                      <BankLogo bank={b} />
-                    </div>
-                  ))}
-                  <span className="hero-bank-more">+100</span>
-                </div>
-              </div>
+              {/* DIAG: hero-banks-mini (6 favicons) temporarily removed to test
+                  iOS Chrome image-decode-blocks-scroll hypothesis. */}
             </div>
 
             {/* RIGHT */}
             <div className="hero-card-wrap fade-up" style={{ animationDelay: '0.12s' }}>
               <div className="hero-photo-card">
-                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=560&h=220&fit=crop" alt="Bank logs" className="hero-photo-img" fetchPriority="high" decoding="async" />
+                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=560&h=220&fit=crop" alt="Bank logs" className="hero-photo-img" fetchPriority="low" decoding="async" loading="lazy" />
                 <div className="hero-photo-overlay">
                   <div className="hero-photo-badge glass">
                     <BadgeCheck size={14} className="green-icon" />
@@ -420,14 +411,7 @@ export default function Landing() {
                   <span className="dash-badge"><TrendingUp size={12} /> Ready to spend</span>
                 </div>
 
-                <div className="dash-entries">
-                  {[
-                    { name: 'Chase Business — $48,200',  abbr: 'JPM',  color: '#117ACA', logo: 'https://www.google.com/s2/favicons?sz=64&domain=chase.com' },
-                    { name: 'Bank of America — $22,400', abbr: 'BOA',  color: '#C0272D', logo: 'https://www.google.com/s2/favicons?sz=64&domain=bankofamerica.com' },
-                    { name: 'Barclays — $15,000',        abbr: 'BARC', color: '#00AEEF', logo: 'https://www.google.com/s2/favicons?sz=64&domain=barclays.com' },
-                    { name: 'Wells Fargo — $9,850',      abbr: 'WF',   color: '#CF4520', logo: 'https://www.google.com/s2/favicons?sz=64&domain=wellsfargo.com' },
-                  ].map((e, i) => <DashRow key={i} entry={e} />)}
-                </div>
+                {/* DIAG: dash-entries (4 favicons via DashRow) temporarily removed */}
 
                 <div className="dash-bar-wrap">
                   <div className="dash-bar-label">
