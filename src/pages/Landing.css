@@ -16,7 +16,9 @@
   -webkit-backdrop-filter: none;
   background: var(--bg-1);
 }
-.lp .banks-track { will-change: transform; transform: translateZ(0); }
+/* GPU hints removed: pre-emptive will-change/translateZ was forcing iOS Safari
+   to promote 2 marquee layers (64 image-bearing cards) at mount, causing ~1-2s
+   first-touch delay. Active transform animation auto-promotes on first frame. */
 
 /* ── Shared ── */
 .green-text { color: var(--green); }
