@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../types';
 import { productApi } from '../api/services';
@@ -315,22 +315,21 @@ export default function Landing() {
   const show = (n: number) => level >= n;
 
   // Marquees (2 infinite CSS animations + 64 image cards) freeze iOS Safari's
-  // first-touch handler for ~1-2s at mount. Defer rendering until the section
-  // approaches viewport; height is reserved via CSS to avoid layout jump.
+  // first-touch handler for ~1-2s at mount. Interaction-based deferral: wait
+  // for the user's first touch/scroll/click before rendering. Once user has
+  // interacted, touch handlers are proven bound and heavy mount is safe.
+  // 3s fallback covers users who just stare at the page.
   const [marqueeReady, setMarqueeReady] = useState(false);
-  const marqueeAnchorRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (marqueeReady) return;
-    const el = marqueeAnchorRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      (entries) => entries.forEach((e) => {
-        if (e.isIntersecting) { setMarqueeReady(true); obs.disconnect(); }
-      }),
-      { rootMargin: '400px 0px' } // start rendering well before user scrolls to it
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
+    const events = ['touchstart', 'pointerdown', 'wheel', 'scroll', 'keydown'];
+    const trigger = () => setMarqueeReady(true);
+    events.forEach((e) => window.addEventListener(e, trigger, { passive: true, once: true }));
+    const fallback = window.setTimeout(trigger, 3000);
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, trigger));
+      clearTimeout(fallback);
+    };
   }, [marqueeReady]);
 
   return (
@@ -493,7 +492,7 @@ export default function Landing() {
           </div>
         </div>
 
-        <div className="banks-marquee-wrap" ref={marqueeAnchorRef}>
+        <div className="banks-marquee-wrap">
           <div className="banks-fade-left" /><div className="banks-fade-right" />
           <div className="banks-marquee">
             {marqueeReady && (
