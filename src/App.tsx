@@ -107,6 +107,16 @@ export default function App() {
       <main style={{ minHeight: 'calc(100vh - 68px)' }}>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/hello" element={
+            <div style={{ padding: 20, minHeight: '250vh' }}>
+              <h1>Scroll test</h1>
+              <p>If this page scrolls immediately with no hang, the problem is inside Landing.tsx.</p>
+              <p>If this also hangs 1-2s before scrolling on iOS Safari, the problem is in the App shell (Navbar, ChatWidget, splash, or global CSS).</p>
+              <p style={{ marginTop: 200 }}>scroll marker 1</p>
+              <p style={{ marginTop: 400 }}>scroll marker 2</p>
+              <p style={{ marginTop: 400 }}>scroll marker 3 — end</p>
+            </div>
+          } />
           <Route path="/shop" element={<Shop />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/login" element={<Login />} />
