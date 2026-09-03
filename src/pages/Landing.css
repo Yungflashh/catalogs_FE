@@ -267,7 +267,7 @@
 }
 .banks-fade-left  { left: 0;  background: linear-gradient(to right, var(--bg-1), transparent); }
 .banks-fade-right { right: 0; background: linear-gradient(to left,  var(--bg-1), transparent); }
-.banks-marquee { overflow: hidden; }
+.banks-marquee { overflow: hidden; min-height: 62px; }
 .banks-track {
   display: flex; gap: 12px; width: max-content;
   animation: marqueeScroll 38s linear infinite; padding: 8px 0;

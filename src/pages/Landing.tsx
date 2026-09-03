@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../types';
 import { productApi } from '../api/services';
@@ -314,6 +314,25 @@ export default function Landing() {
   })();
   const show = (n: number) => level >= n;
 
+  // Marquees (2 infinite CSS animations + 64 image cards) freeze iOS Safari's
+  // first-touch handler for ~1-2s at mount. Defer rendering until the section
+  // approaches viewport; height is reserved via CSS to avoid layout jump.
+  const [marqueeReady, setMarqueeReady] = useState(false);
+  const marqueeAnchorRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (marqueeReady) return;
+    const el = marqueeAnchorRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting) { setMarqueeReady(true); obs.disconnect(); }
+      }),
+      { rootMargin: '400px 0px' } // start rendering well before user scrolls to it
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [marqueeReady]);
+
   return (
     <div className="lp">
 
@@ -474,31 +493,35 @@ export default function Landing() {
           </div>
         </div>
 
-        <div className="banks-marquee-wrap">
+        <div className="banks-marquee-wrap" ref={marqueeAnchorRef}>
           <div className="banks-fade-left" /><div className="banks-fade-right" />
           <div className="banks-marquee">
-            <div className="banks-track">
-              {[...BANKS, ...BANKS].map((b, i) => (
-                <div key={i} className="bank-logo-card glass">
-                  <div className="bank-logo-icon-wrap"><BankLogo bank={b} /></div>
-                  <span className="bank-logo-name">{b.name}</span>
-                </div>
-              ))}
-            </div>
+            {marqueeReady && (
+              <div className="banks-track">
+                {[...BANKS, ...BANKS].map((b, i) => (
+                  <div key={i} className="bank-logo-card glass">
+                    <div className="bank-logo-icon-wrap"><BankLogo bank={b} /></div>
+                    <span className="bank-logo-name">{b.name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
         <div className="banks-marquee-wrap" style={{ marginTop: 14 }}>
           <div className="banks-fade-left" /><div className="banks-fade-right" />
           <div className="banks-marquee">
-            <div className="banks-track banks-track-reverse">
-              {[...BANKS.slice(8), ...BANKS.slice(0,8), ...BANKS.slice(8), ...BANKS.slice(0,8)].map((b, i) => (
-                <div key={i} className="bank-logo-card glass">
-                  <div className="bank-logo-icon-wrap"><BankLogo bank={b} /></div>
-                  <span className="bank-logo-name">{b.name}</span>
-                </div>
-              ))}
-            </div>
+            {marqueeReady && (
+              <div className="banks-track banks-track-reverse">
+                {[...BANKS.slice(8), ...BANKS.slice(0,8), ...BANKS.slice(8), ...BANKS.slice(0,8)].map((b, i) => (
+                  <div key={i} className="bank-logo-card glass">
+                    <div className="bank-logo-icon-wrap"><BankLogo bank={b} /></div>
+                    <span className="bank-logo-name">{b.name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
