@@ -4,6 +4,8 @@ import Navbar from './components/Navbar';
 import { Footer, ProtectedRoute, AdminRoute } from './components/Shared';
 import SplashScreen from './components/SplashScreen';
 import ScrollDebugHUD from './components/ScrollDebugHUD';
+import ChatWidget from './components/ChatWidget';
+import { trackApi } from './api/services';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -13,6 +15,28 @@ function ScrollToTop() {
     const id = requestAnimationFrame(() => window.scrollTo(0, 0));
     return () => cancelAnimationFrame(id);
   }, [pathname]);
+  return null;
+}
+
+// Fire a single visitor ping per browser session so admins get a Telegram
+// notification on a real visit (not on every SPA route change or refresh).
+// Uses sessionStorage: cleared when the tab closes, so a new tab / new day
+// counts as a new session.
+function VisitorPing() {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      if (sessionStorage.getItem('cat_visited') === '1') return;
+      sessionStorage.setItem('cat_visited', '1');
+    } catch {
+      // Private mode may throw on setItem — ignore, best-effort tracking.
+    }
+    // Defer past first paint so the ping never competes with initial render.
+    const id = setTimeout(() => {
+      trackApi.visit(window.location.pathname, document.referrer || '');
+    }, 800);
+    return () => clearTimeout(id);
+  }, []);
   return null;
 }
 
@@ -76,6 +100,7 @@ export default function App() {
     <>
       {!ready && <SplashScreen onDone={handleSplashDone} />}
       <IOSScrollHint />
+      <VisitorPing />
       <ScrollToTop />
       {typeof window !== 'undefined' && window.location.search.includes('debug=1') && <ScrollDebugHUD />}
       <Navbar />
@@ -107,6 +132,7 @@ export default function App() {
         </Routes>
       </main>
       {!isAdmin && <Footer />}
+      {!isAdmin && <ChatWidget />}
     </>
   );
 }

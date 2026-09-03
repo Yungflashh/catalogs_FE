@@ -104,6 +104,21 @@ export const cryptoWalletApi = {
   remove: (id: string) => api.delete(`/crypto-wallets/${id}`).then((r) => r.data),
 };
 
+// ---- Tracking (Telegram notifications) ----
+export const trackApi = {
+  visit: (path: string, referrer: string) =>
+    api.post('/track/visit', { path, referrer }).then((r) => r.data).catch(() => null),
+};
+
+// ---- Chat widget (bridge to Telegram) ----
+export interface ChatMsg { _id: string; from: 'user' | 'admin'; text: string; createdAt: string; }
+export const chatApi = {
+  send: (sessionId: string, text: string, name?: string, email?: string) =>
+    api.post<{ ok: true; message: ChatMsg }>('/chat/send', { sessionId, text, name, email }).then((r) => r.data),
+  mine: (sessionId: string, since?: string) =>
+    api.get<{ messages: ChatMsg[] }>('/chat/mine', { params: { sessionId, since } }).then((r) => r.data),
+};
+
 // ---- Wallet Funding ----
 export const walletFundingApi = {
   create: (amount: number, cryptoWalletId: string) =>
