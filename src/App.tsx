@@ -5,6 +5,7 @@ import { Footer, ProtectedRoute, AdminRoute } from './components/Shared';
 import SplashScreen from './components/SplashScreen';
 import ScrollDebugHUD from './components/ScrollDebugHUD';
 import ChatWidget from './components/ChatWidget';
+import SocialProofToast from './components/SocialProofToast';
 import { trackApi } from './api/services';
 
 function ScrollToTop() {
@@ -78,6 +79,7 @@ import AdminOrders from './pages/admin/AdminOrders';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminCryptoWallets from './pages/admin/AdminCryptoWallets';
 import AdminFundingRequests from './pages/admin/AdminFundingRequests';
+import AdminSocialProof from './pages/admin/AdminSocialProof';
 import FundWallet from './pages/FundWallet';
 import NotFound from './pages/NotFound';
 
@@ -127,12 +129,14 @@ export default function App() {
           <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
           <Route path="/admin/crypto-wallets" element={<AdminRoute><AdminCryptoWallets /></AdminRoute>} />
           <Route path="/admin/funding" element={<AdminRoute><AdminFundingRequests /></AdminRoute>} />
+          <Route path="/admin/social-proof" element={<AdminRoute><AdminSocialProof /></AdminRoute>} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       {!isAdmin && <Footer />}
       {!isAdmin && <ChatWidget />}
+      {!isAdmin && <SocialProofToast />}
     </>
   );
 }

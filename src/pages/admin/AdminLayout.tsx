@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import {
   GridIcon, BoxIcon, PackageCheck, UsersIcon, CoinIcon, WalletIcon,
-  MenuIcon, CloseIcon,
+  MenuIcon, CloseIcon, ChartIcon,
 } from '../../components/Icons';
 import Logo from '../../components/Logo';
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
@@ -16,6 +16,7 @@ const links = [
   { to: '/admin/users', label: 'Users', icon: UsersIcon, end: false },
   { to: '/admin/crypto-wallets', label: 'Crypto Wallets', icon: CoinIcon, end: false },
   { to: '/admin/funding', label: 'Funding', icon: WalletIcon, end: false },
+  { to: '/admin/social-proof', label: 'Social Proof', icon: ChartIcon, end: false },
 ];
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {

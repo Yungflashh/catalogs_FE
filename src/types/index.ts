@@ -84,6 +84,27 @@ export interface CryptoWallet {
   createdAt?: string;
 }
 
+export interface SocialProofEntry {
+  _id: string;
+  name: string;
+  location: string;
+  product: string;
+  amount: number;
+  visible: boolean;
+  createdAt?: string;
+}
+
+export interface SocialProofPublic {
+  enabled: boolean;
+  rotationMs: number;
+  entries: Array<{ _id: string; name: string; location: string; product: string; amount: number }>;
+}
+
+export interface SocialProofConfig {
+  enabled: boolean;
+  rotationMs: number;
+}
+
 export interface WalletFunding {
   _id: string;
   user: string | { _id: string; name: string; email: string; walletBalance: number };

@@ -2,6 +2,7 @@ import api from './client';
 import {
   Product, ProductsResponse, Cart, Wishlist, Order, User, AdminStats,
   CryptoWallet, WalletFunding,
+  SocialProofEntry, SocialProofPublic, SocialProofConfig,
 } from '../types';
 
 // ---- Auth ----
@@ -117,6 +118,22 @@ export const chatApi = {
     api.post<{ ok: true; message: ChatMsg }>('/chat/send', { sessionId, text, name, email }).then((r) => r.data),
   mine: (sessionId: string, since?: string) =>
     api.get<{ messages: ChatMsg[] }>('/chat/mine', { params: { sessionId, since } }).then((r) => r.data),
+};
+
+// ---- Social Proof ----
+export const socialProofApi = {
+  public: () => api.get<SocialProofPublic>('/social-proof/public').then((r) => r.data),
+  list: () => api.get<SocialProofEntry[]>('/social-proof').then((r) => r.data),
+  config: () => api.get<SocialProofConfig>('/social-proof/config').then((r) => r.data),
+  updateConfig: (data: Partial<SocialProofConfig>) =>
+    api.put<SocialProofConfig>('/social-proof/config', data).then((r) => r.data),
+  create: (data: Omit<SocialProofEntry, '_id' | 'createdAt'>) =>
+    api.post<SocialProofEntry>('/social-proof', data).then((r) => r.data),
+  update: (id: string, data: Partial<SocialProofEntry>) =>
+    api.put<SocialProofEntry>(`/social-proof/${id}`, data).then((r) => r.data),
+  remove: (id: string) => api.delete(`/social-proof/${id}`).then((r) => r.data),
+  seed: (force = false) =>
+    api.post<{ seeded: number; message?: string }>('/social-proof/seed', { force }).then((r) => r.data),
 };
 
 // ---- Wallet Funding ----
